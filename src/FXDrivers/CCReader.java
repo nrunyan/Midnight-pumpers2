@@ -7,7 +7,9 @@ import java.util.Random;
 
 /**
  * The credit card readers driver, basically just sends a random cc# when promted
- * to by the user, it also returns the bank responce.
+ * to by the user, it also returns the bank responce.Just handles socket communication
+ *  * so fx class doesn't have to, that way if we ever have to switch up IOPorts
+ *  * the driver keeps any changes way from the gui code
  * Note about bank responce method:
  * Though it will be technically coming from main, the only reason main has
  * to talk to the ccReader is to pass along a message from the bank.
@@ -17,7 +19,7 @@ public class CCReader {
     private Random random=new Random(19);
 
     /**
-     *
+     *Creates a server instance on ccreader port
      */
     public CCReader() {
         server = new IOServer(PortAddresses.CARD_READER_PORT);

@@ -26,6 +26,14 @@ public class CCReaderGUI extends Application {
     private final double width=600;
     private final double height=400;
 
+    /**
+     * basic gui for ccreader, move card arround and when you put it
+     * down it will send ifo to bank
+     * @param stage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     */
     @Override
     public void start(Stage stage) {
 
@@ -77,7 +85,7 @@ public class CCReaderGUI extends Application {
     /**
      * Guys guys please here me out, returning a color really is the best way
      * of handling this guys please you don't understand, guys please
-     * @param bankResponce
+     * @param bankResponce approved or denied based on bank
      */
     private Color handleResponce(String bankResponce){
         //ahah if null--then nothing ooooorr wait, ahah

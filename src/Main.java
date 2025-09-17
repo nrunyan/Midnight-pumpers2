@@ -1,8 +1,14 @@
 import IOPort.IOPort;
 import Util.PortAddresses;
 
-
+/**
+ * Just a basic test main, run me last after starting the guis
+ */
 public class Main {
+    /**
+     * starts the bank, the cc machine, and the hose
+     * @param args no cmd args
+     */
     public static void main(String[] args) {
        IOPort clientHose =new IOPort(PortAddresses.HOSE_PORT);
        IOPort CCHose =new IOPort(PortAddresses.CARD_READER_PORT);

@@ -7,15 +7,15 @@ import Util.PortAddresses;
 /**
  * A very basic bank implementation, just blindly accepts and even cc#
  * and denies any odd cc#
- * I know this is a little odd that its in the driver class, but this is just for testing
- * if everone is cool with it
+ * I know this is a little odd that its in the driver class, when it has a main
+ * but that is the only thing about it that doesn't make it like our other 'drivers'
  */
 public class Bonk {
     private IOServer server;
 
     /**
      * So even though this isn't a GUI, and may never be, it still should be treated
-     * like one of the interfaces
+     * like one of the interfaces rn for testing
      */
     public Bonk(){
         server=new IOServer(PortAddresses.CARD_COMPANY_PORT);

@@ -92,7 +92,7 @@ public class HoseConGUI extends Application {
         };
         animationTimer.start();
 
-        // Rectangle button
+
         Rectangle rectButton = new Rectangle(700, 1000, Color.TRANSPARENT);
         rectButton.setStroke(Color.TRANSPARENT);
 
@@ -119,8 +119,10 @@ public class HoseConGUI extends Application {
     }
 
 
-
-
+    /**
+     * Just reverses the connection, lets its driver handle any
+     * socket communication
+     */
     private void flipConnection(){
         if(connected){
             nozzle.sendConnectionInfo(CommunicationString.NOT_CONNECTED);
