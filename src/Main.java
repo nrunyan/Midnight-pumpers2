@@ -14,6 +14,8 @@ public class Main {
        IOPort clientHose =new IOPort(PortAddresses.HOSE_PORT);
        IOPort CCHose =new IOPort(PortAddresses.CARD_READER_PORT);
        IOPort bankClient=new IOPort(PortAddresses.CARD_COMPANY_PORT);
+       IOPort pump = new IOPort(PortAddresses.PUMP_PORT);
+       IOPort flowmeter = new IOPort(PortAddresses.FLOW_METER_PORT);
        while(true){
            try {
                String clientMsg=clientHose.get();

@@ -17,6 +17,7 @@ public class IOServer {
     private BufferedReader in;
     private PrintWriter out;
     private int portNumber;
+    public volatile boolean ON = false;
     /**
      *  This enables the differentation between read and get.
      *  It stores any message received in this variable, and clears it when
@@ -35,6 +36,7 @@ public class IOServer {
             //clientSocket = serverSocket.accept();
             //in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             //out = new PrintWriter(clientSocket.getOutputStream(), true);
+            ON = true;
         } catch (IOException e) {
             System.out.println("Trouble Connecting to " + portNumber);
             throw new RuntimeException(e);
