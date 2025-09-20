@@ -1,7 +1,9 @@
 package UI;
 import FXDrivers.CCReader;
 import Util.CommunicationString;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -52,7 +54,7 @@ public class CCReaderGUI extends Application {
         creditCardView.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
             mouseOffsetX = e.getSceneX() - creditCardView.getX();
             mouseOffsetY = e.getSceneY() - creditCardView.getY();
-           // creditCardView.setCursor(javafx.scene.Cursor.MOVE); // WHAT SO YOURE TELLING ME
+           creditCardView.setCursor(javafx.scene.Cursor.MOVE); // WHAT SO YOURE TELLING ME
         });
 
         creditCardView.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
@@ -60,16 +62,29 @@ public class CCReaderGUI extends Application {
             double newY = e.getSceneY() - mouseOffsetY;
             creditCardView.setX(newX);
             creditCardView.setY(newY);
+            creditCardView.setCursor(Cursor.OPEN_HAND);
 
         });
+        AnimationTimer animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                String msg=ccReader.getBankRespnse();
+                if(msg!=null){
+                    noImNotExplaingThis.setFill(handleResponce(msg));
+                }
+
+
+            }
+        };
+        animationTimer.start();
 
         creditCardView.addEventHandler(MouseEvent.MOUSE_RELEASED,e->{
             //so this is when they put it down, so its when we check if it's in frame
             //but i didn't feel like doing that so i didn't
-            //ccReader.sendCCInfo();
+            ccReader.sendCCInfo();
             //then maybe wait
-            noImNotExplaingThis.setFill(handleResponce(CommunicationString.APPROVED));
-
+            //noImNotExplaingThis.setFill(handleResponce(CommunicationString.APPROVED));
+            creditCardView.setCursor(Cursor.CLOSED_HAND);
 
         });
 

@@ -31,31 +31,33 @@ public class IOServer {
     public IOServer(int portNumber) {
         this.portNumber = portNumber;
         try {
-            ServerSocket serverSocket = new ServerSocket(portNumber);
-            clientSocket = serverSocket.accept();
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            serverSocket = new ServerSocket(portNumber);
+            //clientSocket = serverSocket.accept();
+            //in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            //out = new PrintWriter(clientSocket.getOutputStream(), true);
         } catch (IOException e) {
             System.out.println("Trouble Connecting to " + portNumber);
             throw new RuntimeException(e);
         }
 
         new Thread(() -> {
-            try {
-                clientSocket = serverSocket.accept();
+            while(true){
+                try {
+                    clientSocket = serverSocket.accept();
+                    in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
-
-                String msg; //THIS IS WHY WE NEED THREADS
-                //THIS WILL HANG ALL OUR STUFF IF WE DON'T HAVE THREADS
-                while ((msg = in.readLine()) != null) {
-                    message=msg;
+                    String msg; //THIS IS WHY WE NEED THREADS
+                    //THIS WILL HANG ALL OUR STUFF IF WE DON'T HAVE THREADS
+                    while ((msg = in.readLine()) != null) {
+                        message=msg;
+                    }
+                } catch (IOException e) {
+                    System.out.println("Issue ");
                 }
-            } catch (IOException e) {
-                System.out.println("Issue ");
+
             }
+
         }).start();
     }
 

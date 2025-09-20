@@ -4,6 +4,7 @@ import Util.PortAddresses;
 /**
  * Just a basic test main, run me last after starting the guis
  */
+
 public class Main {
     /**
      * starts the bank, the cc machine, and the hose
@@ -21,12 +22,14 @@ public class Main {
                if(clientMsg==null){
                    System.out.println("NO Message Null");
                }else{
-                   System.out.println("Client says: "+clientMsg);
+                   System.out.println("Hose says: "+clientMsg);
                }
                if (ccMsg!=null){
+                   System.out.println("Card reader says: "+ccMsg);
                    bankClient.send(ccMsg);
                }
                if(bankMsg!=null){
+                   System.out.println("bonk says "+bankMsg);
                    CCHose.send(bankMsg);
                }
                Thread.sleep(1000);

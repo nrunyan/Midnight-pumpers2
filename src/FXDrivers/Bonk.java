@@ -4,6 +4,8 @@ import IOPort.IOServer;
 import Util.CommunicationString;
 import Util.PortAddresses;
 
+import java.util.Random;
+
 /**
  * A very basic bank implementation, just blindly accepts and even cc#
  * and denies any odd cc#
@@ -12,6 +14,7 @@ import Util.PortAddresses;
  */
 public class Bonk {
     private IOServer server;
+    private Random random=new Random(19);
 
     /**
      * So even though this isn't a GUI, and may never be, it still should be treated
@@ -19,6 +22,7 @@ public class Bonk {
      */
     public Bonk(){
         server=new IOServer(PortAddresses.CARD_COMPANY_PORT);
+        System.out.println("Bonk online");
     }
 
     /**
@@ -27,8 +31,8 @@ public class Bonk {
     public void ApproveOrDeny(){
         String msg=server.get();
         if(msg!=null){
-            int ccNum=Integer.parseInt(msg);
-            if(ccNum%2==0){
+            // int ccNum=Integer.parseInt(msg); doesnt work lmao hdahahhqmsdsdjugigi
+            if(random.nextInt()%2==0){
                 server.send(CommunicationString.APPROVED);
             }else{
                 server.send(CommunicationString.DENIED);
