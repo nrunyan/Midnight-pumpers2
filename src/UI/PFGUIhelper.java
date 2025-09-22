@@ -1,6 +1,6 @@
 package UI;
 
-import components.Flowmeter;
+import components.*;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -10,7 +10,7 @@ public class PFGUIhelper implements Runnable{
     private Text text;
     private Gas gas;
     private Flowmeter flowmeter;
-    private Thread pumpFlowThread;
+    private Pump pump;
     private Rotate rotate1;
     private Rotate rotate2;
     private ProgressBar progressBar;
@@ -28,6 +28,19 @@ public class PFGUIhelper implements Runnable{
         this.flowmeter = flowmeter;
     }
 
+    public void setPump(Pump pump) {
+        this.pump = pump;
+    }
+
+    public void setProgressBarColor(){
+        if(pump.getGasType() == 1) {
+            progressBar.setStyle("-fx-accent: brown;");
+        }else if (pump.getGasType() == 2) {
+            progressBar.setStyle("-fx-accent: yellow;");
+        }else{
+            progressBar.setStyle("-fx-accent: green;");
+        }
+    }
     public void setRotate1(Rotate rotate1) {
         this.rotate1 = rotate1;
     }

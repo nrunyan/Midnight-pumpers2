@@ -68,6 +68,7 @@ public class PumpAndFlowGUI extends Application {
         pump.setGas(gas);
         guiHelper.setGas(gas);
         guiHelper.setFlowmeter(flowmeter);
+        guiHelper.setPump(pump);
         Group root = new Group();
         anchorPane.setPrefHeight(750);
         anchorPane.setPrefWidth(1000);
@@ -169,7 +170,7 @@ public class PumpAndFlowGUI extends Application {
         guiHelper.setProgressBar(progressBar);
         guiHelper.setText(text);
 
-        pump.setProgressBar(progressBar);
+        guiHelper.setProgressBarColor();
 
         valvePipe1.getTransforms().add(rotate1);
         valvePipe2.getTransforms().add(rotate2);
@@ -206,6 +207,7 @@ public class PumpAndFlowGUI extends Application {
         Random random = new Random();
         int gasType = random.nextInt(3) + 1;
         pump.setGasType(gasType);
+        guiHelper.setProgressBarColor();
     }
     private void startThread(Circle butt){
         if(flowmeter.connected()) {
