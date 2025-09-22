@@ -38,13 +38,12 @@ public class Flowmeter implements Runnable {
      */
     @Override
     public void run() {
-        int i = 0;
         while (true) {
             if (ioServer.ON) {
 
-            if(ioServer.get() != null) {
-                gasFlow = 0;
-            }
+                if(ioServer.get() != null) {
+                    gasFlow = 0;
+                }
 
                 if (gas.isOnOff()) {
                     gasFlow += 0.02;
