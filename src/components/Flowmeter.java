@@ -40,13 +40,13 @@ public class Flowmeter implements Runnable {
     public void run() {
         while (true) {
             if (ioServer.ON) {
-
                 if(ioServer.get() != null) {
                     gasFlow = 0;
                 }
 
                 if (gas.isOnOff()) {
                     gasFlow += 0.02;
+                    ioServer.send(String.valueOf(gasFlow));
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {

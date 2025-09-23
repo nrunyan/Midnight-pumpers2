@@ -22,6 +22,7 @@ public class Main {
                String clientMsg=clientHose.get();
                String ccMsg=CCHose.get();
                String bankMsg=bankClient.get();
+               String flowMsg=flowmeter.get();
                if(clientMsg==null){
                    System.out.println("NO Message Null");
                }else{
@@ -34,6 +35,9 @@ public class Main {
                if(bankMsg!=null){
                    System.out.println("bonk says "+bankMsg);
                    CCHose.send(bankMsg);
+               }
+               if(flowMsg != null){
+                   System.out.println("flow says" + flowMsg);
                }
                Thread.sleep(1000);
 
