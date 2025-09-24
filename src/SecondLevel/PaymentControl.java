@@ -59,6 +59,16 @@ public class PaymentControl implements Runnable{
     }
 
     /**
+     * Sends the transaction info,
+     * TODO:talk to team about this, where is it getting the transaction info? Pressumably the pump assembly
+     *  how are we passing that in? How does the pump assembly have a reference to payment control?
+     *   If its passed through main, then this should take args no?
+     */
+    public void sendTransactionInfo(){
+
+    }
+
+    /**
      * So this should be the only thing seen to the outside world
      * This should be a state enum eventually
      * @return true if approved, false else

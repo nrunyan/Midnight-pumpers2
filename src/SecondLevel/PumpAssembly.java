@@ -48,32 +48,41 @@ public class PumpAssembly implements Runnable {
         }
     }
 
-    public void turnGasOn(){
-        pumpClient.send("Gas on TODO");
-        gasOn=false;
+    public boolean getPumpingStatus(){
+        return gasOn;
     }
 
-    public void turnGasOff(){
+    public double getGasPumped() {
+        return volumePumped;
+    }
+
+    public void pumpOn(String gasType){
+        pumpClient.send(gasType);
+        gasOn=true;
+    }
+
+    public void pumpOff(){
         pumpClient.send("Gas OFF TODO");
         gasOn=false;
 
     }
-    //I'm not sure we want this to be a string, it will be sent to us by the screen
-    public void setGasSelection(String gasSelection){
-        pumpClient.send(gasSelection);
 
-    }
+
+
     public void reset(){
         connected=false;
         volumePumped=0.0;
         tankFull=false;
     }
 
+
+
+
+
     /**
      * THe only flow message we should ever get is tank full right? which means
      * turn off
      */
-
     private void handleflowMeterMessage(){
         pumpClient.send("Turn off");
         gasOn=false;
