@@ -60,6 +60,7 @@ public class PumpAndFlowGUI extends Application {
 
         flowmeter = new Flowmeter();
         pump = new Pump();
+        pump.setPg(this);
         guiHelper = new PFGUIhelper();
         flowmeter.setGas(gas);
         pump.setGas(gas);
