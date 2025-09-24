@@ -271,12 +271,13 @@ public class ScreenUI extends Application {
                 // Regular font
         }
         switch (backColor) {
+            //TODO other background colors
             case 0:
                 // Dark Purple
-                lbl.getStyleClass().add("purple_background");
+                lbl.getStyleClass().add("black_background");
             case 2:
                 // Dark Blue
-                lbl.getStyleClass().add("blue_background");
+                lbl.getStyleClass().add("black_background");
             default:
                 // Black
                 lbl.getStyleClass().add("black_background");
@@ -404,14 +405,11 @@ public class ScreenUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         //Screen scr = new Screen();
-
-        ScreenUI screenUI = new ScreenUI();
-        screen=new Screen();
-        screen.setScreenUI(screenUI);
+        screen=new Screen(this);
         screen.startServer();
 
         primaryStage.setTitle("Touch Screen Display");
-        primaryStage.setScene(new Scene(screenUI.getScene(), DISP_W, DISP_H));
+        primaryStage.setScene(new Scene(this.getScene(), DISP_W, DISP_H));
         primaryStage.getScene().getStylesheets().add(
                 getClass().getResource("style.css").toExternalForm()
         );
