@@ -58,11 +58,9 @@ public class PumpAndFlowGUI extends Application {
         timeline.setCycleCount(1);
 
 
-
-
-
         flowmeter = new Flowmeter();
         pump = new Pump();
+        pump.setPg(this);
         guiHelper = new PFGUIhelper();
         flowmeter.setGas(gas);
         pump.setGas(gas);
@@ -191,13 +189,14 @@ public class PumpAndFlowGUI extends Application {
         anchorPane.getChildren().add(text);
 
     }
-    private void turnON(){
+    public void turnON(){
+        System.out.println("pump is on");
         pump.turnOn();
         System.out.println(gas.isOnOff());
         System.out.println("on");
         timeline.play();
     }
-    private void turnOF(){
+    public void turnOF(){
         pump.turnOf();
         System.out.println(gas.isOnOff());
         System.out.println("off");

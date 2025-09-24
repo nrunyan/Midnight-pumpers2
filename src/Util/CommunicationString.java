@@ -9,6 +9,10 @@ public class CommunicationString {
     public static String APPROVED="APPROVED";
     public static String DENIED="BROKE!";
 
+    //PUMP COMMUNICATION
+    public static String TURN_ON="Turn ON pump";
+    public static String TURN_OFF="Turn OFF pump";
+
     //GasStationCommunication
     //I don't quite know if this is the way we want to do it
     //The reason I thinking of it this way, is because I think it would

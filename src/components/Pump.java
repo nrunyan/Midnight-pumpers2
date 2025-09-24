@@ -1,6 +1,7 @@
 package components;
 
 import IOPort.*;
+import UI.PumpAndFlowGUI;
 import sim.Gas;
 import Util.*;
 
@@ -11,14 +12,16 @@ import java.io.IOException;
  * messages it recieves from main
  * Author: Danny Thompson
  */
-public class Pump implements Runnable {
+public class Pump extends Thread {
     private Gas gas;
     private IOServer ioServer;
     private int gasType = 1;
     public Pump(){
         this.ioServer = new IOServer(PortAddresses.PUMP_PORT);
         this.gas = null;
+        this.start();
     }
+
 
     public int getGasType() {
         return gasType;
@@ -42,28 +45,50 @@ public class Pump implements Runnable {
     @Override
     public void run() {
         while(true) {
-            if (ioServer.ON) {
-                String inbox = null;
+            String message=ioServer.get();
+            if(message!=null){
+                System.out.println("Pump gets message: "+message);
+                switch(message){
+                    case "Customer wants gas 1":
+                        System.out.println("turning gas on");
+                        setGasType(1);
+                        turnOn();
+                        break;
+                    case "Customer wants gas 2":
+                        System.out.println("turning gas on");
+                        setGasType(2);
+                        turnOn();
+                        break;
+                    case "Customer wants gas 3":
+                        System.out.println("turning gas on");
+                        setGasType(3);
+                        turnOn();
+                        break;
+                    case "Customer wants gas 4":
+                        System.out.println("turning gas on");
+                        setGasType(4);
+                        turnOn();
+                        break;
+                    case "Customer wants gas 5":
+                        System.out.println("turning gas on");
+                        setGasType(5);
+                        turnOn();
+                        break;
+                    case "Turn OFF pump":
+                        turnOf();
+                        break;
+                    default:
+                        System.out.println("Turning off");
+                        turnOf();
+
+                }
                 try {
-                    inbox = this.ioServer.read();
-                } catch (IOException e) {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                if (inbox != null) {
-                    String message = null;
-                    try {
-                        message = this.ioServer.read();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if (message.equals("SOMETHING THAT MEANS ON")) {
-                        turnOn();
-                    } else if (message.equals("SOMETHING THAT MEANS OFF")) {
-                        turnOf();
-                    } else if (message.equals("SOMETHING THAT MEANS GASTYPE")) {
-                        setGasType(message.charAt(1)); // will need update
-                    }
-                }
+            }else{
+                //System.out.println("Null message at pump");
             }
         }
     }

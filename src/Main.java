@@ -1,4 +1,6 @@
 import IOPort.IOPort;
+import SecondLevel.PumpAssembly;
+import Util.CommunicationString;
 import Util.PortAddresses;
 
 /**
@@ -11,35 +13,21 @@ public class Main {
      * @param args no cmd args
      */
     public static void main(String[] args) {
-       IOPort clientHose =new IOPort(PortAddresses.HOSE_PORT);
-       IOPort CCHose =new IOPort(PortAddresses.CARD_READER_PORT);
-       IOPort bankClient=new IOPort(PortAddresses.CARD_COMPANY_PORT);
-       IOPort flowmeter = new IOPort(PortAddresses.FLOW_METER_PORT);
-       IOPort pump = new IOPort(PortAddresses.PUMP_PORT);
+        PumpAssembly pumpAssemblyTest=new PumpAssembly();
+
 
        while(true){
            try {
-               String clientMsg=clientHose.get();
-               String ccMsg=CCHose.get();
-               String bankMsg=bankClient.get();
-               String flowMsg=flowmeter.get();
-               if(clientMsg==null){
-                   System.out.println("NO Message Null");
-               }else{
-                   System.out.println("Hose says: "+clientMsg);
-               }
-               if (ccMsg!=null){
-                   System.out.println("Card reader says: "+ccMsg);
-                   bankClient.send(ccMsg);
-               }
-               if(bankMsg!=null){
-                   System.out.println("bonk says "+bankMsg);
-                   CCHose.send(bankMsg);
-               }
-               if(flowMsg != null){
-                   System.out.println("flow says" + flowMsg);
-               }
-               Thread.sleep(1000);
+
+               Thread.sleep(2000);
+               pumpAssemblyTest.pumpOn(CommunicationString.GAS1_SELECTED);
+               System.out.println("Trying to turn gas on");
+               Thread.sleep(2000);
+               System.out.println(pumpAssemblyTest.getGasPumped());
+               System.out.println("trying to get volume");
+               Thread.sleep(2000);
+               pumpAssemblyTest.pumpOff();
+               System.out.println("trying to turn gas off");
 
            } catch (InterruptedException e) {
                throw new RuntimeException(e);

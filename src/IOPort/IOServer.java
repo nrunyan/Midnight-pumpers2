@@ -23,7 +23,7 @@ public class IOServer {
      *  It stores any message received in this variable, and clears it when
      *  get is called, returns it when read is called.
      */
-    public String message;
+    public volatile String message;
     /**
      * Creates an IOPort.IOPort instance, the IOPort.IOPort automatically stores any messages
      * sent to it. USE THIS ONLY FOR JAVAFX management.
@@ -46,13 +46,16 @@ public class IOServer {
             while(true){
                 try {
                     clientSocket = serverSocket.accept();
+                    System.out.println("Connecting on "+portNumber);
                     in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
 
                     String msg; //THIS IS WHY WE NEED THREADS
                     //THIS WILL HANG ALL OUR STUFF IF WE DON'T HAVE THREADS
                     while ((msg = in.readLine()) != null) {
+                        System.out.println("Client says b4 "+msg);
                         message=msg;
+                        System.out.println("Client says "+message);
                     }
                 } catch (IOException e) {
                     System.out.println("Issue ");
@@ -79,7 +82,7 @@ public class IOServer {
      *
      * @return String containing the message.
      */
-    public String get() {
+    public synchronized String get() {
         String temp = message;
         message = null;
         return temp;
