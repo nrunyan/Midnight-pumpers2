@@ -46,7 +46,8 @@ public class Flowmeter implements Runnable {
 
                 if (gas.isOnOff()) {
                     gasFlow += 0.02;
-                    ioServer.send(String.valueOf(gasFlow));
+                    ioServer.send(String.valueOf(String.format("%.2f",
+                            gasFlow)));
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
