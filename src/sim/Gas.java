@@ -1,7 +1,7 @@
 package sim;
 
 public class Gas {
-    private boolean onOff;
+    private volatile boolean onOff;
 
     public Gas(){
         this.onOff = false;
