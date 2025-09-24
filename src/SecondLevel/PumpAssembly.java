@@ -4,19 +4,20 @@ import IOPort.IOPort;
 import Util.CommunicationString;
 import Util.PortAddresses;
 
-public class PumpAssembly implements Runnable {
+public class PumpAssembly extends Thread {
     private IOPort clientHose;
     private IOPort flowmeterClient;
     private IOPort pumpClient;
     private boolean connected=false;
     private double volumePumped=0.0;
     private boolean tankFull=false;
-    private boolean gasOn=false;
+    private volatile boolean gasOn=false;
 
     public PumpAssembly(){
         clientHose =new IOPort(PortAddresses.HOSE_PORT);
         flowmeterClient = new IOPort(PortAddresses.FLOW_METER_PORT);
         pumpClient = new IOPort(PortAddresses.PUMP_PORT);
+        this.start();
 
     }
 
@@ -25,26 +26,34 @@ public class PumpAssembly implements Runnable {
      */
     @Override
     public void run() {
-        String hoseMessage=clientHose.get();
-        String flowMeterMessage= flowmeterClient.get();
-        String pumpMessage=pumpClient.get();
+
         while(true){
+            String hoseMessage=clientHose.get();
+            String flowMeterMessage= flowmeterClient.get();
+            String pumpMessage=pumpClient.get(); //should pump really say anything
             try{
                 if(flowMeterMessage!=null){
                     System.out.println("flowMeter says: "+flowMeterMessage);
-                    handleflowMeterMessage();
+                    handleflowMeterMessage(flowMeterMessage);
                 }
                 if(hoseMessage!=null){
                     System.out.println("Hose says: "+hoseMessage);
                     handleHoseMessage(hoseMessage);
                 }
+                Thread.sleep(50);
 
 
             }catch(Exception e){
                 System.out.println("Some issue in pump assembly");
                 e.printStackTrace();
-                throw e;
+
+                try {
+                    throw e;
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
+
         }
     }
 
@@ -62,7 +71,7 @@ public class PumpAssembly implements Runnable {
     }
 
     public void pumpOff(){
-        pumpClient.send("Gas OFF TODO");
+        pumpClient.send(CommunicationString.TURN_OFF);
         gasOn=false;
 
     }
@@ -80,21 +89,26 @@ public class PumpAssembly implements Runnable {
 
 
     /**
-     * THe only flow message we should ever get is tank full right? which means
+     * THe only flow message we should ever get is tank full and volume? which means
      * turn off
      */
-    private void handleflowMeterMessage(){
-        pumpClient.send("Turn off");
-        gasOn=false;
+    private void handleflowMeterMessage(String flowMeter){
+        if(flowMeter.equals(CommunicationString.TURN_OFF)){
+            pumpClient.send(CommunicationString.TURN_OFF);
+            gasOn=false;
+        }else{
+            volumePumped=Double.parseDouble(flowMeter);
+        }
+
 
     }
 
     private void handleHoseMessage(String hoseMessage){
         if(hoseMessage.equals(CommunicationString.CONNECTED)){
             System.out.println("connected");
-            connected=false;
-        }else{
             connected=true;
+        }else{
+            connected=false;
         }
     }
 }

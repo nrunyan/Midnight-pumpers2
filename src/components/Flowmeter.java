@@ -9,7 +9,7 @@ import Util.*;
  * sends messages to main to update the flow value
  * Author: Danny Thompson
  */
-public class Flowmeter implements Runnable {
+public class Flowmeter extends Thread {
     private Gas gas;
     private double gasFlow;
     private IOServer ioServer;
@@ -18,6 +18,7 @@ public class Flowmeter implements Runnable {
         this.ioServer = new IOServer(PortAddresses.FLOW_METER_PORT);
         this.gas = null;
         this.gasFlow = 0;
+        this.start();
     }
 
     public boolean connected(){
@@ -44,16 +45,16 @@ public class Flowmeter implements Runnable {
                     gasFlow = 0;
                 }
 
-                if (gas.isOnOff()) {
+                if (gas!=null&&gas.isOnOff()) {
                     gasFlow += 0.02;
-                    ioServer.send(String.valueOf(String.format("%.2f",
-                            gasFlow)));
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    ioServer.send(String.valueOf(gasFlow));
+
                 }
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
     }
