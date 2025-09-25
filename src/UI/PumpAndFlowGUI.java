@@ -60,12 +60,14 @@ public class PumpAndFlowGUI extends Application {
 
         flowmeter = new Flowmeter();
         pump = new Pump();
+        System.out.println(pump.getGasType());
         fuelTank.setTankColor(pump.getGasType());
         guiHelper = new PFGUIhelper();
         flowmeter.setGas(gas);
         pump.setGas(gas);
         guiHelper.setGas(gas);
         guiHelper.setFlowmeter(flowmeter);
+        guiHelper.setFuelTank(fuelTank);
         guiHelper.setPump(pump);
         guiHelper.setTimeline(timeline);
         Group root = new Group();
@@ -162,7 +164,7 @@ public class PumpAndFlowGUI extends Application {
         tempButtOff.setOnMouseClicked(event -> turnOF());
 
         Circle tempButtGasType = new Circle(150,150,30,Color.YELLOW);
-        tempButtGasType.setOnMouseClicked(event -> setGasType());
+       // tempButtGasType.setOnMouseClicked(event -> setGasType());
         guiHelper.setRotate1(rotate1);
         guiHelper.setRotate2(rotate2);
         guiHelper.setProgressBar(progressBar);
@@ -287,7 +289,7 @@ public class PumpAndFlowGUI extends Application {
             tankPane.getChildren().addAll(hose, tankBody, fuel, cap, nozzle);
         }
 
-        private void setTankColor(int x){
+        public void setTankColor(int x){
             Color color1;
             Color color2;
             switch (x) {

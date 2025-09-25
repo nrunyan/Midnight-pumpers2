@@ -20,7 +20,7 @@ public class Main {
            try {
 
                Thread.sleep(2000);
-               pumpAssemblyTest.pumpOn(CommunicationString.GAS1_SELECTED);
+               pumpAssemblyTest.pumpOn(CommunicationString.GAS2_SELECTED);
                System.out.println("Trying to turn gas on");
                Thread.sleep(2000);
                System.out.println(pumpAssemblyTest.getGasPumped());
