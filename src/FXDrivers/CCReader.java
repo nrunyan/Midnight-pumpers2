@@ -41,7 +41,8 @@ public class CCReader {
 
     }
 
-    /** TODO:Talk to team about this
+    /** TODO:Talk to team about this <-- what about a boolean approved?
+     *
      * Returns response from the client, this should ONLY be approved/denied
      * @return the servers response, this CAN be null, so maybe we put a wait in?
      *

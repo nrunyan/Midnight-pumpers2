@@ -10,7 +10,7 @@ import Util.PortAddresses;
 public class Customer {
     private IOPort ScreenClient;
     /**
-     * Creates client ioports to talk to the Screen. Customer recieves button
+     * Creates client IOPort to talk to the Screen. Customer receives button
      * presses from Screen, and sets the screen based on input from Main.
      */
     public Customer(){

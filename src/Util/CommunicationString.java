@@ -6,6 +6,7 @@ public class CommunicationString {
     public static String NOT_CONNECTED="NOT CONNECTED";
 
     //Credit card/Bank communication
+    // Todo: talk about making boolean
     public static String APPROVED="APPROVED";
     public static String DENIED="BROKE!";
 
@@ -15,9 +16,10 @@ public class CommunicationString {
 
     //GasStationCommunication
     //I don't quite know if this is the way we want to do it
-    //The reason I thinking of it this way, is because I think it would
+    //The reason Im thinking of it this way, is because I think it would
     //be a lot harder to parse if we used, say a string builder, but please feel free
     //to change this if you disagree, because it does seem a little silly
+    //Todo: maybe we put these into a string array and pass a string "(index)T/F"?
     public static String OUT_OF_GAS1="No gas 1";
     public static String OUT_OF_GAS2="No gas 2";
     public static String OUT_OF_GAS3="No gas 3";
@@ -36,6 +38,8 @@ public class CommunicationString {
     //To me, its not a big deal to do it like this, makes it easy to put in a switch statment,
     //and makes the code readably, but if you guys would rather this done with string builders,
     //or something more clever then let me know
+    //Todo: not sure whats best but we could
+    // keep these in an array and just pass the index in the array??
     public static String GAS1_SELECTED="Customer wants gas 1";
     public static String GAS2_SELECTED="Customer wants gas 2";
     public static String GAS3_SELECTED="Customer wants gas 3";
