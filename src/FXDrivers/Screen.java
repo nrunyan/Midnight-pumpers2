@@ -9,6 +9,7 @@ import Util.MarkdownLanguage;
 import Util.PortAddresses;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Joel Villarreal
@@ -99,7 +100,34 @@ public class Screen implements Runnable{
         }
         int size, font, color;
         String text = t.getText();
-        int[] fieldNums = {t.getField()}; //TODO need more than single field sometimes
+        int fieldRep = t.getField();
+        List<Integer> fieldNums = new ArrayList<>();
+        switch (fieldRep){
+            // Add singular field number
+            case 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 -> fieldNums.add(fieldRep);
+            // Spanning multiple fields
+            case 11 -> {
+                fieldNums.add(0);
+                fieldNums.add(1);
+            }
+            case 23 -> {
+                fieldNums.add(2);
+                fieldNums.add(3);
+            }
+            case 45 -> {
+                fieldNums.add(4);
+                fieldNums.add(5);
+            }
+            case 67 -> {
+                fieldNums.add(6);
+                fieldNums.add(7);
+            }
+            case 89 -> {
+                fieldNums.add(8);
+                fieldNums.add(9);
+            }
+
+        }
         MarkdownConstants.Size sz = t.getSize();
         MarkdownConstants.Font fnt = t.getFont();
         MarkdownConstants.BGColor bgColor = t.getBGColor();
@@ -119,7 +147,12 @@ public class Screen implements Runnable{
             // set background color
             default -> color = 1;   //TODO, multiple background colors
         }
-        screenUI.createLbl(fieldNums, size, font, color, text);
+        // Converting List<Integer> to int[] (primitive type int array)
+        int[] fieldArray = new int[fieldNums.size()];
+        for (int i = 0; i < fieldNums.size(); i++) {
+            fieldArray[i] = fieldNums.get(i);
+        }
+        screenUI.createLbl(fieldArray, size, font, color, text);
     }
 
     /**
