@@ -8,7 +8,7 @@ import Util.PortAddresses;
  * API class for BONK sever and CC reader
  * We can make this a runnable, please let me know what you think asap
  */
-public class PaymentControl implements Runnable{
+public class PaymentControl extends Thread{
     private IOPort bonkClient;
     private IOPort CCReaderClient;
     private boolean approved=false;  //THIS IS JUST FOR TESTING, THIS should be changed to a state enum
@@ -22,6 +22,7 @@ public class PaymentControl implements Runnable{
     public PaymentControl(){
         bonkClient=new IOPort(PortAddresses.CARD_COMPANY_PORT);
         CCReaderClient=new IOPort(PortAddresses.CARD_READER_PORT);
+        this.start();
     }
 
     /**

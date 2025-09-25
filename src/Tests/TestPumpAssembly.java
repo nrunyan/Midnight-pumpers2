@@ -1,20 +1,19 @@
-import IOPort.IOPort;
+package Tests;
+
 import SecondLevel.PumpAssembly;
 import Util.CommunicationString;
-import Util.PortAddresses;
 
 /**
  * Just a basic test main, run me last after starting the guis
  */
 
-public class Main {
+public class TestPumpAssembly {
     /**
      * starts the bank, the cc machine, and the hose
      * @param args no cmd args
      */
     public static void main(String[] args) {
         PumpAssembly pumpAssemblyTest=new PumpAssembly();
-
 
        while(true){
            try {
