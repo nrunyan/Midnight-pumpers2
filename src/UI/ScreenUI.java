@@ -64,17 +64,6 @@ public class ScreenUI extends Application {
         resetGrid();
     }
 
-    /**
-     * The screen constructor
-     * @param scr the screen to picture
-     */
-    public ScreenUI(Screen scr) {
-        GRID_PANE = new GridPane(HORZ, VERT);
-//        this.screen = scr;
-//        this.screen.setScreenUI(this);
-        TOGGLE_GROUP = new ToggleGroup();
-        resetGrid();
-    }
     private void clearGP() {
         GRID_PANE.getChildren().clear(); // clear the grid pane
     }
@@ -155,17 +144,6 @@ public class ScreenUI extends Application {
     }
 
     /**
-     * Put text boxes in the correct positions
-     * This method is for testing purposes
-     */
-    private void createTextBoxes() {
-        for (int i = 0; i < 10; i += 2) {
-            int[] spanning = {i, i+1};
-            createLbl(spanning, 0, 0, 0, spanning[0] + "" + spanning[1]);
-        }
-    }
-
-    /**
      * Add this label to the grid
      * @param row the row of the grid to add the label
      * @param col the column of the grid to add the label
@@ -237,7 +215,6 @@ public class ScreenUI extends Application {
      * @param fontType font type
      * @param backColor background color
      * @param str the string of text to display
-     * @return the created label
      */
     public void createLbl(int[] txtFields, int fontSize, int fontType,
                             int backColor, String str) {
@@ -246,52 +223,39 @@ public class ScreenUI extends Application {
         lbl.setText(str);
         lbl.getStyleClass().add("label");
         switch (fontSize) {
-            case 0:
+            case 0 ->
                 // Small
-                lbl.setFont(SMALL_FNT);
-                break;
-            case 2:
+                    lbl.setFont(SMALL_FNT);
+            case 2 ->
                 // Large
-                lbl.setFont(LRG_FNT);
-                break;
-            default:
+                    lbl.setFont(LRG_FNT);
+            default ->
                 // Medium
-                lbl.setFont(MED_FNT);
+                    lbl.setFont(MED_FNT);
         }
         switch (fontType) {
-            case 0:
+            case 0 ->
                 // Italic
-                lbl.getStyleClass().add("italic");
-                break;
-            case 2:
+                    lbl.getStyleClass().add("italic");
+            case 2 ->
                 // Bold
-                lbl.getStyleClass().add("bold");
-                break;
-            default:
-                // Regular font
+                    lbl.getStyleClass().add("bold");
+            default -> {
+            }
+            // Regular font
         }
         switch (backColor) {
+            //TODO other background colors
             case 0:
                 // Dark Purple
-                lbl.getStyleClass().add("purple_background");
+                lbl.getStyleClass().add("black_background");
             case 2:
                 // Dark Blue
-                lbl.getStyleClass().add("blue_background");
+                lbl.getStyleClass().add("black_background");
             default:
                 // Black
                 lbl.getStyleClass().add("black_background");
         }
-    }
-
-    /**
-     * Put Buttons in the correct positions
-     * This method is for testing purposes
-     */
-    private void createButtons() {
-        for (int i = 0; i < 9; i++) {
-            createBtn(i, ButtonType.MUTUALLY_EXCLUSIVE);
-        }
-        createBtn(9, ButtonType.RESPONSIVE);
     }
 
     /**
@@ -404,14 +368,11 @@ public class ScreenUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         //Screen scr = new Screen();
-
-        ScreenUI screenUI = new ScreenUI();
-        screen=new Screen();
-        screen.setScreenUI(screenUI);
+        screen=new Screen(this);
         screen.startServer();
 
         primaryStage.setTitle("Touch Screen Display");
-        primaryStage.setScene(new Scene(screenUI.getScene(), DISP_W, DISP_H));
+        primaryStage.setScene(new Scene(this.getScene(), DISP_W, DISP_H));
         primaryStage.getScene().getStylesheets().add(
                 getClass().getResource("style.css").toExternalForm()
         );
