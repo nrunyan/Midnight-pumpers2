@@ -1,7 +1,6 @@
 package Tests;
 
 import SecondLevel.PaymentControl;
-import Util.CommunicationString;
 
 /**
  * Another test main, run after starting the GUIs
