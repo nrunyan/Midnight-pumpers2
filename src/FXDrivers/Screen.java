@@ -50,7 +50,9 @@ public class Screen implements Runnable{
         while (true){
             String message = ioServer.get();
             if(message!=null){
-                setScreen(message);
+                // Markdown Language Handling
+                MarkdownLanguage.Commands cm = MarkdownLanguage.getCommands(message);
+                setScreen(cm);
             }
 
         }
