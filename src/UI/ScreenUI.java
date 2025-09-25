@@ -384,11 +384,12 @@ public class ScreenUI extends Application {
 //        screen.setScreen("t4-s0-f0-c0-text label one:t5-my next text box:t01-this field:b4m:b5m:b9x");
 //        screen.setScreen("t01-Remove Nozzle, Select Fuel Grade:t2-$2.85:t3-$2.90:t4-$2.95:t5-$3.00:t8-Cancel:t9-Confirm:b2m:b3m:b4m:b5m:b8x:b9x");
 
+        // The screens
 //        screen.setScreen(MarkdownLanguage.getCommands(getPumpUnavailableString()));
 //        screen.setScreen(MarkdownLanguage.getCommands(getWelcomeString()));
 //        screen.setScreen(MarkdownLanguage.getCommands(getWaitingAuthorizationString()));
-//        screen.setScreen(MarkdownLanguage.getCommands(getCardDeclinedString()));
-        screen.setScreen(getScreen1());
+        screen.setScreen(MarkdownLanguage.getCommands(getCardDeclinedString()));
+//        screen.setScreen(getScreen1());
 
     }
 
