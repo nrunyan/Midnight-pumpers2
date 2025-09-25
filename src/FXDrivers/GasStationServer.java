@@ -5,7 +5,7 @@ import Util.*;
 
 import java.util.Random;
 
-public class GasStationServer implements Runnable{
+public class GasStationServer extends Thread{
     private double[] gasPrices;
     private IOServer ioServer;
     private double[] gasGallons;
@@ -16,6 +16,7 @@ public class GasStationServer implements Runnable{
         gasGallons=new double[]{100,100,100,100,100};
         ioServer = new IOServer(PortAddresses.GAS_STATION_PORT);
         totalMoney = 0;
+        this.start();
     }
 
     /**
@@ -119,6 +120,10 @@ public class GasStationServer implements Runnable{
 
     public double[] getGasPrices() {
         return gasPrices;
+    }
+
+    public double[] getGasGallons() {
+        return gasGallons;
     }
 
     @Override
