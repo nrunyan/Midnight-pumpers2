@@ -48,6 +48,7 @@ public class Flowmeter extends Thread {
                 if (gas!=null&&gas.isOnOff()) {
                     gasFlow += 0.02;
                     ioServer.send(String.valueOf(gasFlow));
+                    //if(gasFlow>)
 
                 }
             }
