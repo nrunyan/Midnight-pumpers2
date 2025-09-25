@@ -71,6 +71,7 @@ public class PFGUIhelper implements Runnable{
         while (flowmeter.connected()) {
 
             if (gas.isOnOff()) {
+
                 timeline.play();
                 updatedText();
                 rotate1.setAngle(startR1 + 3);

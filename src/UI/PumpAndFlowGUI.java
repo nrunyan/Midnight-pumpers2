@@ -60,6 +60,7 @@ public class PumpAndFlowGUI extends Application {
 
         flowmeter = new Flowmeter();
         pump = new Pump();
+        fuelTank.setTankColor(pump.getGasType());
         guiHelper = new PFGUIhelper();
         flowmeter.setGas(gas);
         pump.setGas(gas);
@@ -204,6 +205,7 @@ public class PumpAndFlowGUI extends Application {
         Random random = new Random();
         int gasType = random.nextInt(3) + 1;
         pump.setGasType(gasType);
+        //fuelTank.setTankColor(gasType);
         guiHelper.setProgressBarColor();
     }
     private void nothing(){
@@ -246,10 +248,9 @@ public class PumpAndFlowGUI extends Application {
             fuel.setY(yOffset + height - 4 - (height - 8));
             fuel.setArcWidth(arc);
             fuel.setArcHeight(arc);
-            fuel.setFill(new LinearGradient(
-                    0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
-                    new Stop(0, new Color(.81, .42, .04, 1)), new Stop(1, new Color(.158, .79, .08, 1)))
-            );
+
+            setTankColor(1);
+
             Rectangle emptyPart = new Rectangle(width - 8, height - 8);
             emptyPart.setX(4);
             emptyPart.setY(yOffset + 4);
@@ -284,6 +285,38 @@ public class PumpAndFlowGUI extends Application {
             nozzle.setFill(Color.valueOf("CDCB1AFF"));
             nozzle.setStroke(Color.valueOf("CDCB1AFF"));
             tankPane.getChildren().addAll(hose, tankBody, fuel, cap, nozzle);
+        }
+
+        private void setTankColor(int x){
+            Color color1;
+            Color color2;
+            switch (x) {
+                // orange and blue, black and purple, pink and white, pink and green
+                case 1 -> {
+                    color1 = Color.rgb(159, 69, 255);
+                    color2= Color.rgb(67, 23, 87);
+                }
+                case 2 -> {
+                    color1 = Color.rgb(200, 96, 33);
+                    color2= Color.rgb(36, 96, 192);
+                }
+                case 3 -> {
+                    color1 = Color.rgb(221, 80, 80);
+                    color2= Color.rgb(204, 177, 192);
+                }
+                case 4 -> {
+                    color1 = Color.rgb(221, 80, 80);
+                    color2= Color.rgb(139, 255, 50);
+                }
+                default -> {
+                    color1= Color.rgb(0, 0, 0);
+                    color2= Color.rgb(67, 23, 87);
+                }
+            };
+            fuel.setFill(new LinearGradient(
+                    0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
+                    new Stop(0, color1), new Stop(1, color2))
+            );
         }
 
         public DoubleProperty fuelLevelProperty() {
