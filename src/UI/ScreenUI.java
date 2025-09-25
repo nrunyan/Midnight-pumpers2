@@ -2,6 +2,7 @@ package UI;
 
 
 import FXDrivers.Screen;
+import Util.MarkdownLanguage;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -350,6 +351,16 @@ public class ScreenUI extends Application {
     private Parent getScene() {
         return GRID_PANE;
     }
+
+    /**
+     * TODO: make screens using MarkdownLanguage file
+     * @return a Commands
+     */
+    private MarkdownLanguage.Commands getScreen1(){
+        MarkdownLanguage.ButtonCommands bc = new MarkdownLanguage.ButtonCommands();
+        MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
+        return new MarkdownLanguage.Commands(bc, tfc);
+    }
     /**
      * The main entry point for all JavaFX applications.
      * The start method is called after the init method has returned,
@@ -377,9 +388,8 @@ public class ScreenUI extends Application {
                 getClass().getResource("style.css").toExternalForm()
         );
         primaryStage.show();
-
         screen.setScreen("t4-s0-f0-c0-text label one:t5-my next text box:t01-this field:b4m:b5m:b9x");
-        screen.setScreen("t01-Remove Nozzle, Select Fuel Grade:t2-$2.85:t3-$2.90:t4-$2.95:t5-$3.00:t8-Cancel:t9-Confirm:b2m:b3m:b4m:b5m:b8x:b9x");
+//        screen.setScreen("t01-Remove Nozzle, Select Fuel Grade:t2-$2.85:t3-$2.90:t4-$2.95:t5-$3.00:t8-Cancel:t9-Confirm:b2m:b3m:b4m:b5m:b8x:b9x");
     }
 }
 
