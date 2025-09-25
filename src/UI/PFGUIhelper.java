@@ -91,7 +91,7 @@ public class PFGUIhelper implements Runnable{
                 }
             } else if (progressBar.getProgress() > 0.1) {
                 progressBar.setProgress(progressBar.getProgress() - 0.1);
-                timeline.stop();
+                timeline.pause();
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
