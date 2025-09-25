@@ -2,6 +2,8 @@ package UI;
 
 
 import FXDrivers.Screen;
+import Util.MarkdownConstants;
+import Util.MarkdownLanguage;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -31,9 +33,9 @@ public class ScreenUI extends Application {
     private final int  BTN_FACTOR =   8; /* buttons take up an eighth of the
                                              horizontal space */
     // Fonts
-    private final Font SMALL_FNT = new Font(12);
+    private final Font SMALL_FNT = new Font(18);
     private final Font MED_FNT   = new Font(20);
-    private final Font LRG_FNT   = new Font(20);
+    private final Font LRG_FNT   = new Font(32);
 
     // The Screen Object that this GUI is displaying
     private Screen screen;
@@ -350,6 +352,8 @@ public class ScreenUI extends Application {
     private Parent getScene() {
         return GRID_PANE;
     }
+
+
     /**
      * The main entry point for all JavaFX applications.
      * The start method is called after the init method has returned,
@@ -377,9 +381,127 @@ public class ScreenUI extends Application {
                 getClass().getResource("style.css").toExternalForm()
         );
         primaryStage.show();
+//        screen.setScreen("t4-s0-f0-c0-text label one:t5-my next text box:t01-this field:b4m:b5m:b9x");
+//        screen.setScreen("t01-Remove Nozzle, Select Fuel Grade:t2-$2.85:t3-$2.90:t4-$2.95:t5-$3.00:t8-Cancel:t9-Confirm:b2m:b3m:b4m:b5m:b8x:b9x");
 
-        screen.setScreen("t4-s0-f0-c0-text label one:t5-my next text box:t01-this field:b4m:b5m:b9x");
-        screen.setScreen("t01-Remove Nozzle, Select Fuel Grade:t2-$2.85:t3-$2.90:t4-$2.95:t5-$3.00:t8-Cancel:t9-Confirm:b2m:b3m:b4m:b5m:b8x:b9x");
+        // The screens
+//        screen.setScreen(MarkdownLanguage.getCommands(getPumpUnavailableString()));
+//        screen.setScreen(MarkdownLanguage.getCommands(getWelcomeString()));
+//        screen.setScreen(MarkdownLanguage.getCommands(getWaitingAuthorizationString()));
+        screen.setScreen(MarkdownLanguage.getCommands(getCardDeclinedString()));
+//        screen.setScreen(getScreen1());
+
+    }
+
+    //TODO move these to Customer
+    /**
+     * Get the pump unavailable screen (String representation)
+     * @return pump unavailable screen (String representation)
+     */
+    private String getPumpUnavailableString() {
+        // Button and text field commands
+        MarkdownLanguage.ButtonCommands bc = new MarkdownLanguage.ButtonCommands();
+        MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
+
+        // Pump Unavailable Message
+        MarkdownLanguage.TextFieldCommands.TextField tf = new MarkdownLanguage.TextFieldCommands.TextField("PUMP UNAVAILABLE", 23, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+
+        // add commands
+        tfc.addFieldCommand(tf);
+
+        // return String representation of the commands
+        MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
+        return MarkdownLanguage.getMarkdown(cmds);
+    }
+    /**
+     * Get the welcome screen string representation
+     * @return welcome screen string representation
+     */
+    private String getWelcomeString() {
+        // Button and text field commands
+        MarkdownLanguage.ButtonCommands bc = new MarkdownLanguage.ButtonCommands();
+        MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
+
+        // Pump Unavailable Message
+        MarkdownLanguage.TextFieldCommands.TextField welcome = new MarkdownLanguage.TextFieldCommands.TextField("Welcome", 23, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.TextFieldCommands.TextField side_note = new MarkdownLanguage.TextFieldCommands.TextField("Scan Card to Continue...", 9, MarkdownConstants.Size.Small, MarkdownConstants.Font.Normal, MarkdownConstants.BGColor.White);
+
+        //Add commands
+        tfc.addFieldCommand(welcome);
+        tfc.addFieldCommand(side_note);
+
+        // return String representation of the commands
+        MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
+        return MarkdownLanguage.getMarkdown(cmds);
+    }
+    /**
+     * Get the pump unavailable screen String representation
+     * @return pump unavailable screen MDL String
+     */
+    private String getWaitingAuthorizationString() {
+        // Button and text field commands
+        MarkdownLanguage.ButtonCommands bc = new MarkdownLanguage.ButtonCommands();
+        MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
+
+        // Pump Unavailable Message
+        MarkdownLanguage.TextFieldCommands.TextField tf = new MarkdownLanguage.TextFieldCommands.TextField("Awaiting Authorization..", 23, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+
+        // add commands
+        tfc.addFieldCommand(tf);
+
+        // return String representation of the commands
+        MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
+        return MarkdownLanguage.getMarkdown(cmds);
+    }
+    /**
+     * Get the card declined Screen
+     * @return card declined Screen MDL String
+     */
+    private String getCardDeclinedString() {
+        // Button and text field commands
+        MarkdownLanguage.ButtonCommands bc = new MarkdownLanguage.ButtonCommands();
+        MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
+
+        // Text Fields
+        MarkdownLanguage.TextFieldCommands.TextField cardDeclined = new MarkdownLanguage.TextFieldCommands.TextField("Card Declined", 23, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.TextFieldCommands.TextField sideNote = new MarkdownLanguage.TextFieldCommands.TextField("Scan Card to Continue...", 9, MarkdownConstants.Size.Small, MarkdownConstants.Font.Normal, MarkdownConstants.BGColor.White);
+
+        // Add Commands
+        tfc.addFieldCommand(cardDeclined);
+        tfc.addFieldCommand(sideNote);
+
+        // return String representation of the commands
+        MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
+        return MarkdownLanguage.getMarkdown(cmds);
+    }
+    /**
+     * TODO: make this take in prices of gas
+     * @return a Commands
+     */
+    private MarkdownLanguage.Commands getScreen1(){
+        MarkdownLanguage.ButtonCommands bc = new MarkdownLanguage.ButtonCommands();
+        MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
+        // Create 5 buttons for the gas types
+        MarkdownLanguage.ButtonCommands.Button b1 = new MarkdownLanguage.ButtonCommands.Button(2, true, false);
+        MarkdownLanguage.ButtonCommands.Button b2 = new MarkdownLanguage.ButtonCommands.Button(3, true, false);
+        MarkdownLanguage.ButtonCommands.Button b3 = new MarkdownLanguage.ButtonCommands.Button(4, true, false);
+        MarkdownLanguage.ButtonCommands.Button b4 = new MarkdownLanguage.ButtonCommands.Button(5, true, false);
+        MarkdownLanguage.ButtonCommands.Button b5 = new MarkdownLanguage.ButtonCommands.Button(6, true, false);
+        // Add those gas type buttons
+        bc.addButtonCommand(b1);
+        bc.addButtonCommand(b2);
+        bc.addButtonCommand(b3);
+        bc.addButtonCommand(b4);
+        bc.addButtonCommand(b5);
+
+        //Create 2 mutually exclusive buttons for cancel and Start/Stop
+        MarkdownLanguage.ButtonCommands.Button b6 = new MarkdownLanguage.ButtonCommands.Button(8, false, true);
+        MarkdownLanguage.ButtonCommands.Button b7 = new MarkdownLanguage.ButtonCommands.Button(9, false, true);
+        // Add those mutually exclusive buttons
+        bc.addButtonCommand(b6);
+        bc.addButtonCommand(b7);
+
+        return new MarkdownLanguage.Commands(bc, tfc);
     }
 }
 
