@@ -69,6 +69,7 @@ public class PFGUIhelper implements Runnable{
     @Override
     public void run() {
         while (flowmeter.connected()) {
+
             if (gas.isOnOff()) {
                 timeline.play();
                 updatedText();
