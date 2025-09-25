@@ -65,6 +65,10 @@ public class GasStationServer implements Runnable{
         // changes if its easier to handle it a different way
     }
 
+    public double getTotalMoney() {
+        return totalMoney;
+    }
+
     private void gasUsed(int gasG, double gasV){
         gasGallons[gasG-1] -= gasV;
         if(gasGallons[gasG-1] < 0){
@@ -119,10 +123,11 @@ public class GasStationServer implements Runnable{
 
     @Override
     public void run() {
-        makePrices();
+
         ON =true;
         while (true){
             try {
+                makePrices();
                 handleMessage();
                 Thread.sleep(1000);
 
