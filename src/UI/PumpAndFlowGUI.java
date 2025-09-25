@@ -66,6 +66,7 @@ public class PumpAndFlowGUI extends Application {
         guiHelper.setGas(gas);
         guiHelper.setFlowmeter(flowmeter);
         guiHelper.setPump(pump);
+        guiHelper.setTimeline(timeline);
         Group root = new Group();
         anchorPane.setPrefHeight(750);
         anchorPane.setPrefWidth(1000);

@@ -1,6 +1,7 @@
 package UI;
 
 import components.*;
+import javafx.animation.Timeline;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -16,6 +17,7 @@ public class PFGUIhelper implements Runnable{
     private ProgressBar progressBar;
     private double startR1 = 45;
     private double startR2 = 135;
+    private Timeline timeline;
     PFGUIhelper(){
         this.text = new Text("00.00");
         this.rotate1 = new Rotate();
@@ -26,6 +28,9 @@ public class PFGUIhelper implements Runnable{
 
     public void setFlowmeter(Flowmeter flowmeter) {
         this.flowmeter = flowmeter;
+    }
+    public void setTimeline(Timeline timeline){
+        this.timeline = timeline;
     }
 
     public void setPump(Pump pump) {
@@ -65,6 +70,7 @@ public class PFGUIhelper implements Runnable{
     public void run() {
         while (flowmeter.connected()) {
             if (gas.isOnOff()) {
+                timeline.play();
                 updatedText();
                 rotate1.setAngle(startR1 + 3);
                 rotate2.setAngle(startR2 + 3);
@@ -85,6 +91,7 @@ public class PFGUIhelper implements Runnable{
                 }
             } else if (progressBar.getProgress() > 0.1) {
                 progressBar.setProgress(progressBar.getProgress() - 0.1);
+                timeline.stop();
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
