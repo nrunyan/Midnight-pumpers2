@@ -82,6 +82,8 @@ public class PumpAndFlowGUI extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("PumpFlow");
         primaryStage.show();
+        Thread thread2 = new Thread(guiHelper);
+        thread2.start();
     }
     private void makeAnchor(){
         double xs = 50;
@@ -157,9 +159,6 @@ public class PumpAndFlowGUI extends Application {
         Circle tempButtOff = new Circle(150,60,30,Color.RED);
         tempButtOff.setOnMouseClicked(event -> turnOF());
 
-        Circle tempButtThread = new Circle(60,150,30,Color.GREEN);
-        tempButtThread.setOnMouseClicked(event -> startThread(tempButtThread));
-
         Circle tempButtGasType = new Circle(150,150,30,Color.YELLOW);
         tempButtGasType.setOnMouseClicked(event -> setGasType());
         guiHelper.setRotate1(rotate1);
@@ -174,7 +173,6 @@ public class PumpAndFlowGUI extends Application {
 
         anchorPane.getChildren().add(tempButtOn);
         anchorPane.getChildren().add(tempButtOff);
-        anchorPane.getChildren().add(tempButtThread);
         anchorPane.getChildren().add(tempButtGasType);
         anchorPane.getChildren().add(leftFirstPipe);
         anchorPane.getChildren().add(rightFirstPipe);
@@ -206,21 +204,6 @@ public class PumpAndFlowGUI extends Application {
         int gasType = random.nextInt(3) + 1;
         pump.setGasType(gasType);
         guiHelper.setProgressBarColor();
-    }
-    private void startThread(Circle butt){
-        if(flowmeter.connected()) {
-            Thread thread = new Thread(flowmeter);
-            thread.start();
-            System.out.println("on");
-            Thread thread1 = new Thread(pump);
-            thread1.start();
-            Thread thread2 = new Thread(guiHelper);
-            thread2.start();
-            butt.setOnMouseClicked(event -> nothing() );
-
-        }else {
-            System.out.println("wait");
-        }
     }
     private void nothing(){
 
