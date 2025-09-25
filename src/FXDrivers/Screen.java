@@ -21,22 +21,26 @@ public class Screen implements Runnable{
     private final String REGEX_0 = ":"; // split messages by the ':' character
     private final String REGEX_1 = "-"; // split messages by the '-' character
     private final int NULL_BTN    =  -1; // signifies no button selected
-    private final int UNSET = -1; // signifies a text option is unset
 
     // Button Tracking
     private int selectedBtn = NULL_BTN; // the fuel grade selection
 
-    // Screen has a Communicator type IO Port (client or server?)
-    //TODO: IOPort
 
     // The gui
     private ScreenUI screenUI = null;
+
+    // The IOServer
     private IOServer ioServer;
     /**
      * Make this Screen
      */
     public Screen() {
-
+    }
+    /**
+     * Make this Screen, given a screenUI
+     */
+    public Screen(ScreenUI screenUI) {
+        this.screenUI = screenUI;
     }
     /**
      * Runs this operation.
@@ -54,14 +58,6 @@ public class Screen implements Runnable{
     public void startServer(){
         ioServer=new IOServer(PortAddresses.SCREEN_PORT);
 
-    }
-
-    /**
-     * A screen UI setter
-     * @param scrUI the screen UI
-     */
-    public void setScreenUI(ScreenUI scrUI) {
-        this.screenUI = scrUI;
     }
 
     /**
@@ -92,7 +88,7 @@ public class Screen implements Runnable{
 
     /**
      * Create a text box on the UI
-     * @param t
+     * @param t the text field command
      */
     private void createTxt(MarkdownLanguage.TextFieldCommands.TextField t) {
         if (screenUI == null) {
@@ -119,14 +115,14 @@ public class Screen implements Runnable{
         }
         switch (bgColor) {
             // set background color
-            default -> color = 1;
+            default -> color = 1;   //TODO, multiple background colors
         }
         screenUI.createLbl(fieldNums, size, font, color, text);
     }
 
     /**
      * Create a button on the UI
-     * @param btn
+     * @param btn the button to create
      */
     private void createBtn(MarkdownLanguage.ButtonCommands.Button btn) {
         if (screenUI == null) {
@@ -190,7 +186,8 @@ public class Screen implements Runnable{
     /**
      * Create a text box on the screen based on field number, font size, font
      * type, background color, and text string
-     * @param mlString
+     * @param mlString the mlString with all the info
+     *                 Can be of form:
      */
     private void createTxt(String mlString) {
         int size = -1;
@@ -233,22 +230,20 @@ public class Screen implements Runnable{
             char indicator = txtStrings[i].charAt(0);
             numChar = txtStrings[i].charAt(1);
             switch (indicator) {
-                case 's' :
+                case 's' ->
                     // Size
-                    size = Character.getNumericValue(numChar);
-                    break;
-                case 'f':
-                    font = Character.getNumericValue(numChar);
-                    // Font
-                    break;
-                case 'c':
+                        size = Character.getNumericValue(numChar);
+                case 'f' -> font = Character.getNumericValue(numChar);
+
+                // Font
+                case 'c' ->
                     // Background Color
-                    color = Character.getNumericValue(numChar);
-                    break;
-                default:
+                        color = Character.getNumericValue(numChar);
+                default -> {
                     // Error, unexpected input type
                     System.out.println("Error: unexpected text format");
                     errorOccurred();
+                }
             }
         }
 
@@ -324,7 +319,7 @@ public class Screen implements Runnable{
      * Notify communicator of an error
      */
     private void errorOccurred() {
-        notifyCommunicator(NULL_BTN);
+        notifyIOPort(NULL_BTN);
     }
 
     /**
@@ -338,7 +333,7 @@ public class Screen implements Runnable{
             errorOccurred();
         } else {
             if (notifyMain) {
-                notifyCommunicator(btnNumber);
+                notifyIOPort(btnNumber);
             } else {
                 // store the button press
                 selectedBtn = btnNumber;
@@ -349,19 +344,16 @@ public class Screen implements Runnable{
      * Notify the Main System of the screen button state, via the Communicator
      * IO Port
      */
-    private void notifyCommunicator(int pressedBtn) {
+    private void notifyIOPort(int pressedBtn) {
         if (pressedBtn == NULL_BTN) {
-            // TODO send error message
             System.out.println("ERROR");
-//            communicator.send("ERROR");
             return;
         }
-        //TODO: implement Communicator IO Port
         if(screenUI != null) {
             screenUI.setBlank();
         }
         System.out.println(btnString(pressedBtn));
-//        communicator.send(btnString(pressedBtn));
+        //TODO notify IOPort
     }
     /**
      * for communicating with the Main System
