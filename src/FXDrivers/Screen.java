@@ -53,7 +53,14 @@ public class Screen implements Runnable{
             if(message!=null){
                 // Markdown Language Handling
                 MarkdownLanguage.Commands cm = MarkdownLanguage.getCommands(message);
-                setScreen(cm);
+                if (cm == null) {
+                    //error
+                    System.out.println("MarkdownLanguage.getCommands(m) returned null");
+                    errorOccurred();
+                } else {
+                    // Set the screen
+                    setScreen(cm);
+                }
             }
 
         }
@@ -126,7 +133,7 @@ public class Screen implements Runnable{
                 fieldNums.add(8);
                 fieldNums.add(9);
             }
-
+            default -> fieldNums.add(0); // default to zero
         }
         MarkdownConstants.Size sz = t.getSize();
         MarkdownConstants.Font fnt = t.getFont();
