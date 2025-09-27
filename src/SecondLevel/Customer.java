@@ -1,22 +1,23 @@
 package SecondLevel;
 
-import FXDrivers.Screen;
 import IOPort.IOPort;
 import Util.MarkdownConstants;
 import Util.MarkdownLanguage;
 import Util.PortAddresses;
 
+import java.util.List;
+
 /**
  * The customer API provides the functionality for retrieving information from the screen.
  */
 public class Customer {
-    private IOPort ScreenClient;
+    private IOPort screenClient;
     /**
      * Creates client IOPort to talk to the Screen. Customer receives button
      * presses from Screen, and sets the screen based on input from Main.
      */
     public Customer(){
-        ScreenClient =new IOPort(PortAddresses.SCREEN_PORT);
+        screenClient =new IOPort(PortAddresses.SCREEN_PORT);
     }
 
     /**
@@ -34,6 +35,87 @@ public class Customer {
     public int getGasChoice(){
         return 0;
     }
+
+    /**
+     * Notify customer that the pump is unavailable
+     * Via IO Port
+     */
+    public void setPumpUnavailable() {
+        screenClient.send(getPumpUnavailableString());
+    }
+
+    /**
+     * Welcome the customer (when this pump is idle/awaiting card input)
+     * Via IO Port
+     */
+    public void setWelcome(){
+        screenClient.send(getWelcomeString());
+    }
+    /**
+     * Notify customer that their card is waiting authorization from the bank
+     * Via IO Port
+     */
+    public  void setWaitingAuthorization(){
+        screenClient.send(getWaitingAuthorizationString());
+    }
+
+    /**
+     * Notify the customer their card was declined
+     * Via IO Port
+     */
+    public void setCardDeclined(){
+        screenClient.send(getCardDeclinedString());
+    }
+
+    /**
+     * Give the Customer ability to select fuel grade from the in use price list
+     * Via IO Port
+     * @param inUsePList the in use price list
+     */
+    public void setSelectGrade(List<Double> inUsePList){
+        // Convert List<Double> to double[] using streams
+        double[] pListArray = inUsePList.stream().mapToDouble(Double::doubleValue).toArray();
+
+        //Notify through IO Port
+        screenClient.send(getGradeSelectionString(pListArray));
+    }
+
+    /**
+     * Notify the customer of the transaction status (giving them the option to
+     * resume fueling)
+     * Via IO Port
+     * @param gasSelection the gas selected by the user
+     * @param selectionPrice the price selected by the user
+     * @param volumePumped the volume pumped at this moment
+     * @param totalCost the amount of income the bank will make at this moment
+     */
+    public void setCharging(int gasSelection, double selectionPrice, double volumePumped, double totalCost) {
+        //TODO: currently ignoring gas selection, does this matter?
+        screenClient.send(getChargingString(selectionPrice, volumePumped, totalCost));
+    }
+
+    /**
+     * Notify the customer of the transaction status (giving them the option to
+     * stop actively fueling)
+     * Via the IO Port
+     * @param gasSelection the gas selected by the user
+     * @param selectionPrice the price selected by the user
+     * @param volumePumped the volume pumped at this moment
+     * @param totalCost the amount of income the bank will make at this moment
+     */
+    public void setFueling(int gasSelection, double selectionPrice, double volumePumped, double totalCost) {
+        //TODO: currently ignoring gas selection, does this matter?
+        screenClient.send(getFuelingString(selectionPrice, volumePumped, totalCost));
+    }
+
+    /**
+     * Tell the Customer goodbye
+     * Via the IO POrt
+     */
+    public void setGoodBye() {
+        screenClient.send(getGoodbyeString());
+    }
+
     /**
      * Get the pump unavailable screen (String representation)
      * @return pump unavailable screen (String representation)
@@ -53,6 +135,7 @@ public class Customer {
         MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
         return MarkdownLanguage.getMarkdown(cmds);
     }
+
     /**
      * Get the welcome screen string representation
      * @return welcome screen string representation
@@ -74,6 +157,7 @@ public class Customer {
         MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
         return MarkdownLanguage.getMarkdown(cmds);
     }
+
     /**
      * Get the pump unavailable screen String representation
      * @return pump unavailable screen MDL String
@@ -93,6 +177,7 @@ public class Customer {
         MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
         return MarkdownLanguage.getMarkdown(cmds);
     }
+
     /**
      * Get the card declined Screen
      * @return card declined Screen MDL String
@@ -114,6 +199,7 @@ public class Customer {
         MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
         return MarkdownLanguage.getMarkdown(cmds);
     }
+
     /**
      * Get a gas selection string representation of the screen
      * @param prices the list of prices
@@ -197,6 +283,7 @@ public class Customer {
         MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
         return MarkdownLanguage.getMarkdown(cmds);
     }
+
     /**
      * Get the string representation of the fueling screen (has a stop fueling
      * button)
@@ -234,6 +321,7 @@ public class Customer {
         MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
         return MarkdownLanguage.getMarkdown(cmds);
     }
+
     /**
      * Get the string representation of the goodbye string
      * @return the goodbye string screen representation
