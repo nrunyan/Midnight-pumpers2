@@ -397,8 +397,8 @@ public class Screen implements Runnable{
         if(screenUI != null) {
             screenUI.setBlank();
         }
-        System.out.println(btnString(pressedBtn));
-        //TODO notify IOPort
+        System.out.println(btnString(pressedBtn)); //TODO delete this
+        ioServer.send(btnString(pressedBtn));
     }
     /**
      * for communicating with the Main System
@@ -406,9 +406,6 @@ public class Screen implements Runnable{
      * @return the screens current state
      */
     private String btnString(int pressedBtn) {
-        //TODO: make more modular? State object rather than String?
-        //TODO: make sure everyone is on the same page about button messaging
-        // info
         if (pressedBtn == NULL_BTN) {
             // Should never be called
             System.out.println("ERROR: calling btnString() w/ pressedBtn == NULL_BTN");
