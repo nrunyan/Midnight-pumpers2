@@ -57,6 +57,12 @@ public class PumpAssembly extends Thread {
         }
     }
 
+    /**
+     * This is one of the methods called by main, returns if the gas is on or not
+     *
+     * @return true if gas is on, false if not
+     */
+
     public boolean getPumpingStatus(){
         return gasOn;
     }
@@ -66,9 +72,19 @@ public class PumpAssembly extends Thread {
     }
 
     public void pumpOn(String gasType){
-        pumpClient.send(gasType);
-        gasOn=true;
+        if(connected){
+            pumpClient.send(gasType);
+            gasOn=true;
+        }else {
+            System.out.println("HOSE NOT CONNECTED");
+        }
+
+
     }
+
+    /**
+     * Turns the pump off, this will be called by main and also in this class
+     */
 
     public void pumpOff(){
         pumpClient.send(CommunicationString.TURN_OFF);
@@ -77,7 +93,9 @@ public class PumpAssembly extends Thread {
     }
 
 
-
+    /**
+     * Resets all variables, likely should just be called by main
+     */
     public void reset(){
         connected=false;
         volumePumped=0.0;
@@ -103,12 +121,20 @@ public class PumpAssembly extends Thread {
 
     }
 
+    /**
+     *
+     * Handles any hose message, which should just be turn on and off,
+     * handles turning off in house
+     * @param hoseMessage connected, not connected, tank full
+     */
+
     private void handleHoseMessage(String hoseMessage){
         if(hoseMessage.equals(CommunicationString.CONNECTED)){
             System.out.println("connected");
             connected=true;
         }else{
             connected=false;
+            pumpOff();
         }
     }
 }
