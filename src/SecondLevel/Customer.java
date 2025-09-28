@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * The customer API provides the functionality for retrieving information from the screen.
  */
-public class Customer extends Thread{ //TODO: this should not be a thread (for testing purposes)
+public class Customer { //TODO: this should not be a thread (for testing purposes)
     // split messages by the ':' character
     private final String REGEX = ":";
 
@@ -25,7 +25,7 @@ public class Customer extends Thread{ //TODO: this should not be a thread (for t
      */
     public Customer(){
         screenClient =new IOPort(PortAddresses.SCREEN_PORT);
-        this.start();
+//        this.start();
     }
 
     //TODO
@@ -33,22 +33,22 @@ public class Customer extends Thread{ //TODO: this should not be a thread (for t
      * Runs this operation.
      * This is completely for testing purposes at this moment
      */
-    @Override
-    public void run() {
-        int indx = 1;
-        setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
-//        setCharging(1, 3.00, 10.01, 30.03);
-//        setFueling(1, 3.00, 10.01, 30.03);
-        while(true){
-            // Sleeping for test purposes
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            int gasC = getGasChoice();
-        }
-    }
+//    @Override
+//    public void run() {
+//        int indx = 1;
+//        setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
+////        setCharging(1, 3.00, 10.01, 30.03);
+////        setFueling(1, 3.00, 10.01, 30.03);
+//        while(true){
+//            // Sleeping for test purposes
+//            try {
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//            int gasC = getGasChoice();
+//        }
+//    }
 
     /**
      * A private method to demonstarte screen setting
