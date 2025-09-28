@@ -1,8 +1,10 @@
 package FXDrivers;
 
 import IOPort.IOServer;
+import UI.BankGUI;
 import Util.CommunicationString;
 import Util.PortAddresses;
+import javafx.application.Platform;
 
 import java.util.Random;
 
@@ -15,6 +17,7 @@ import java.util.Random;
 public class Bonk {
     private IOServer server;
     private Random random=new Random(19);
+    private BankGUI bankGUI = null;
     private double moneyMade=0.0;
 
     /**
@@ -34,11 +37,29 @@ public class Bonk {
         if(msg!=null){
             if(msg.startsWith("$")){
                 moneyMade+=Double.valueOf(msg.substring(1));
+                if (bankGUI != null) {
+                    // Update GUI if it exists
+                    Platform.runLater(() -> {
+                        bankGUI.moneyTransfer(msg);
+                    });
+                }
             }else{
                 // int ccNum=Integer.parseInt(msg); doesnt work lmao hdahahhqmsdsdjugigi
                 if(random.nextInt()%2==0){
+                    if (bankGUI != null) {
+                        // Update GUI if it exists
+                        Platform.runLater(() -> {
+                            bankGUI.displayApproved(msg);
+                        });
+                    }
                     server.send(CommunicationString.APPROVED);
                 }else{
+                    if (bankGUI != null) {
+                        // Update GUI if it exists
+                        Platform.runLater(() -> {
+                            bankGUI.displayDenied(msg);
+                        });
+                    }
                     server.send(CommunicationString.DENIED);
                 }
 
@@ -49,6 +70,49 @@ public class Bonk {
             System.out.println("bonk gets null msg");
         }
 
+    }
+
+    /**
+     * approve or deny the following message
+     * This is for testing purposes
+     * @param msg
+     */
+    public void ApproveOrDeny(String msg) {
+        if(msg!=null){
+            if(msg.startsWith("$")){
+                moneyMade+=Double.valueOf(msg.substring(1));
+                if (bankGUI != null) {
+                    // Update GUI if it exists
+                    Platform.runLater(() -> {
+                        bankGUI.moneyTransfer(msg);
+                    });
+                }
+            }else{
+                // int ccNum=Integer.parseInt(msg); doesnt work lmao hdahahhqmsdsdjugigi
+                if(random.nextInt()%2==0){
+                    if (bankGUI != null) {
+                        // Update GUI if it exists
+                        Platform.runLater(() -> {
+                            bankGUI.displayApproved(msg);
+                        });
+                    }
+//                    server.send(CommunicationString.APPROVED);
+                }else{
+                    if (bankGUI != null) {
+                        // Update GUI if it exists
+                        Platform.runLater(() -> {
+                            bankGUI.displayDenied(msg);
+                        });
+                    }
+//                    server.send(CommunicationString.DENIED);
+                }
+
+            }
+
+
+        }else{
+            System.out.println("bonk gets null msg");
+        }
     }
 
     /**
@@ -69,6 +133,15 @@ public class Bonk {
         }
 
     }
+
+    /**
+     * Set this Bank's Bank Gui
+     * @param bankGUI the bank gui to update
+     */
+    public void setBankGUI(BankGUI bankGUI) {
+        this.bankGUI = bankGUI;
+    }
+
     /**
      * Gang correct me if im wrong but the bonk just has to respond to msgs right?
      */

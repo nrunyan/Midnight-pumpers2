@@ -42,3 +42,10 @@
 .bold {
     -fx-font-weight: bold;
 }
+
+/* Bank GUI */
+.bank-text{
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 25px;
+    -fx-text-fill: white;
+}
