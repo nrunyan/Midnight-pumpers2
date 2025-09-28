@@ -18,7 +18,7 @@ import java.util.List;
  */
 //TODO:
 // - Connect to IO Port
-public class Screen {
+public class Screen extends Thread{
     // Constants
     private final String REGEX_0 = ":"; // split messages by the ':' character
     private final String REGEX_1 = "-"; // split messages by the '-' character
@@ -44,32 +44,32 @@ public class Screen {
     public Screen(ScreenUI screenUI) {
         this.screenUI = screenUI;
     }
-//    /**
-//     * Runs this operation.
-//     */
-//    @Override
-//    public void run() {
-//        while (true){
-//            String message = ioServer.get();
-//            if(message!=null){
-////                System.out.println("message in Screen: " + message);
-//                // Markdown Language Handling
-//                MarkdownLanguage.Commands cm = MarkdownLanguage.getCommands(message);
-//                if (cm == null) {
-//                    //error
-//                    System.out.println("MarkdownLanguage.getCommands(m) returned null");
-//                    errorOccurred();
-//                } else {
-//                    // Set the screen
-//                    setScreen(cm);
-//                }
-//            }
-//
-//        }
-//    }
+    /**
+     * Runs this operation.
+     */
+    @Override
+    public void run() {
+        while (true){
+            String message = ioServer.get();
+            if(message!=null){
+//                System.out.println("message in Screen: " + message);
+                // Markdown Language Handling
+                MarkdownLanguage.Commands cm = MarkdownLanguage.getCommands(message);
+                if (cm == null) {
+                    //error
+                    System.out.println("MarkdownLanguage.getCommands(m) returned null");
+                    errorOccurred();
+                } else {
+                    // Set the screen
+                    setScreen(cm);
+                }
+            }
+
+        }
+    }
     public void startServer(){
         ioServer=new IOServer(PortAddresses.SCREEN_PORT);
-//        this.start();
+        this.start();
     }
 
     /**
