@@ -55,7 +55,7 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
 ////            test(indx);
 //            ScreenStatus screenStatus = getStatus();
 //            System.out.println("screen Status: " + screenStatus);
-////            if (indx > 7) {
+////            if (indx > 8) {
 ////                indx = 1;
 ////            } else {
 ////                indx ++;
@@ -75,9 +75,11 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
             case 3 -> setWaitingAuthorization();
             case 4 -> setCardDeclined();
             case 5 -> setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
-            case 6 -> setCharging( 3.00, 10.01, 30.03);
-            case 7 -> setFueling( 3.00, 10.01, 30.03);
-            case 8 -> setGoodBye();
+            case 6 -> setStartPumping(3.0);
+            case 7 -> setCharging( 3.00, 10.01, 30.03);
+            case 8 -> setFueling( 3.00, 10.01, 30.03);
+            case 9 -> setGoodBye();
+            default -> System.out.println("test in Customer issue");
         }
     }
 
@@ -93,24 +95,29 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
         if (btnCode != null) {
             switch (screenNum) {
                 case 1 -> {
-                    // Pump unavailable screen
-
+                    // Pump unavailable screen (shouldn't be calling get Status)
+                    System.out.println("Error: calling Customer.getStatus() on pump unavailable screen");
+                    return ScreenStatus.ERROR;
                 }
                 case 2 -> {
-                    // Welcome screen
-
+                    // Welcome screen (shouldn't be calling get Status)
+                    System.out.println("Error: calling Customer.getStatus() on welcome screen");
+                    return ScreenStatus.ERROR;
                 }
                 case 3 -> {
-                    // Waiting Authorization screen
-
+                    // Waiting Authorization screen (shouldn't be calling get Status)
+                    System.out.println("Error: calling Customer.getStatus() on waiting authorization screen");
+                    return ScreenStatus.ERROR;
                 }
                 case 4 -> {
-                    // Card Declined Screen
-
+                    // Card Declined Screen (shouldn't be calling get Status)
+                    System.out.println("Error: calling Customer.getStatus() on card declined screen");
+                    return ScreenStatus.ERROR;
                 }
                 case 5 -> {
-                    // Select Grade Screen
-
+                    // Select Grade Screen (shouldn't be calling get Status)
+                    System.out.println("Error: calling Customer.getStatus() on select grade screen (call getGasChoice() instead)");
+                    return ScreenStatus.ERROR;
                 }
                 case 6 -> {
                     // Start Pumping Screen (Start, Cancel Transaction)
@@ -120,6 +127,10 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
                     } else if (btnCode.charAt(0) == '9') {
                         // Cancel Transaction
                         return ScreenStatus.CANCEL;
+                    } else {
+                        // Unexpected behavior
+                        System.out.println("ERROR: Customer button to state conversion failed (pumping screen six)");
+                        return ScreenStatus.ERROR;
                     }
                 }
                 case 7 -> {
@@ -130,6 +141,10 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
                     } else if (btnCode.charAt(0) == '9') {
                         // End Transaction btn pressed
                         return ScreenStatus.END;
+                    } else {
+                        // Unexpected behavior
+                        System.out.println("ERROR: Customer button to state conversion failed (charging screen seven)");
+                        return ScreenStatus.ERROR;
                     }
                 }
                 case 8 -> {
@@ -140,10 +155,16 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
                     } else if (btnCode.charAt(0) == '9') {
                         // End Transaction btn pressed
                         return ScreenStatus.END;
+                    } else {
+                        // Unexpected behavior
+                        System.out.println("ERROR: Customer button to state conversion failed (fueling screen eight)");
+                        return ScreenStatus.ERROR;
                     }
                 }
                 default -> {
-                    // Goodbye Screen
+                    // Goodbye Screen (shouldn't be calling get Status)
+                    System.out.println("Error: calling Customer.getStatus() on goodbye screen");
+                    return ScreenStatus.ERROR;
                 }
             }
         }
@@ -153,11 +174,16 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
     /**
      * Returns which gas type the customer selected, null(for no gas selected),low,mid,high.
      * @return the gas choice
+     *         retursn -3, when calling this on the incorrect screen
      *         returns -2, for no gas selected
      *         returns -1, when the customer cancels
      *         returns 1 through 5 for gas type
      */
     public int getGasChoice(){
+        if (screenNum != 5) {
+            System.out.println("Error: calling Customer.getGasChoice(), while not on gas selection screen");
+            return -3;
+        }
         String btnCode = screenClient.get();
         if (btnCode == null) {
             return -2;
