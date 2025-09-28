@@ -74,9 +74,9 @@ public class IOPort {
     /**
      *
      * @return
-     * @throws IOException
+
      */
-    public String read() throws IOException {
+    public String read()  {
         return message;
     }
 

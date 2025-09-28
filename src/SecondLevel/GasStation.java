@@ -1,6 +1,7 @@
 package SecondLevel;
 
 import IOPort.IOPort;
+import Util.GasTypeEnum;
 import Util.PortAddresses;
 
 import java.util.LinkedList;
@@ -20,15 +21,11 @@ public class GasStation {
      * Handles the messages that it is getting from gasStationSever
      */
     public void handleMessage(){
-        String msg = gasStationClient.get();
+        String msg = gasStationClient.read();
         if(msg != null){
             String[] messages = msg.split(":");
             if(messages[0].equals("1")){
-                setPrices(msg);
-            } else if (msg.equals("ON")) {
-                onOff = true;
-            } else if(msg.equals("OFF")){
-                onOff = false;
+                receiveInfo(msg);
             }
         }
     }
@@ -54,24 +51,28 @@ public class GasStation {
 
     /**
      * Gets set from a string that it gets from the GasStationServer
-     * @param priceS
+     * @param info
      */
-    public void setPrices(String priceS) {
-        LinkedList<Double> priceList = new LinkedList<>();
-        String[] stings = priceS.split(":");
-        for (int i = 1; i < stings.length;i++){
-            priceList.add(Double.parseDouble(stings[i]));
+    public void receiveInfo(String info) {
+        LinkedList<Double> infoList = new LinkedList<>();
+        String[] stings = info.split(":");
+        for (int i = 1; i < stings.length-1;i++){
+            infoList.add(Double.parseDouble(stings[i]));
         }
-        this.prices = priceList;
+        this.onOff = false;
+        if(stings[stings.length-1].equals("ON")){
+            this.onOff = true;
+        }
+        this.prices = infoList;
     }
 
     /**
      * Sends the transaction made to the gas station
      */
     public void sendTransactionInfo (double dollarAmount, double volume,
-                                     int gasType){
-        gasStationClient.send(String.format("1:%.2f",dollarAmount));
-        gasStationClient.send(String.format("2:x:%.2f",volume));
+                                     GasTypeEnum gasType){
+        int gasT = gasType.intVersion;
+        gasStationClient.send(String.format("1:%.2f:"+gasT+":%.2f",
+                dollarAmount,volume));
     }
-
 }
