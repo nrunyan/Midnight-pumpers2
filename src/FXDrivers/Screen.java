@@ -7,6 +7,7 @@ import UI.ScreenUI;
 import Util.MarkdownConstants;
 import Util.MarkdownLanguage;
 import Util.PortAddresses;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 //TODO:
 // - Connect to IO Port
-public class Screen implements Runnable{
+public class Screen extends Thread{
     // Constants
     private final String REGEX_0 = ":"; // split messages by the ':' character
     private final String REGEX_1 = "-"; // split messages by the '-' character
@@ -51,6 +52,7 @@ public class Screen implements Runnable{
         while (true){
             String message = ioServer.get();
             if(message!=null){
+//                System.out.println("message in Screen: " + message);
                 // Markdown Language Handling
                 MarkdownLanguage.Commands cm = MarkdownLanguage.getCommands(message);
                 if (cm == null) {
@@ -67,7 +69,7 @@ public class Screen implements Runnable{
     }
     public void startServer(){
         ioServer=new IOServer(PortAddresses.SCREEN_PORT);
-
+        this.start();
     }
 
     /**
@@ -80,6 +82,12 @@ public class Screen implements Runnable{
             errorOccurred();
             return;
         }
+        // Clear the screen
+        Platform.runLater(() -> {
+            screenUI.setBlank();
+        });
+
+        // Markdown Language Handling
         MarkdownLanguage.ButtonCommands bCmds = cmds.getBCommands();
         MarkdownLanguage.TextFieldCommands tCmds = cmds.getTCommands();
 
@@ -160,7 +168,10 @@ public class Screen implements Runnable{
             fieldArray[i] = fieldNums.get(i);
         }
         // Create the label on the screen
-        screenUI.createLbl(fieldArray, size, font, color, text);
+        Platform.runLater(() -> {
+            screenUI.createLbl(fieldArray, size, font, color, text);
+        });
+
     }
 
     /**
@@ -175,9 +186,15 @@ public class Screen implements Runnable{
         int btnNum = btn.getField();
         boolean isResponsive = btn.getResponsive();
         if (isResponsive) {
-            screenUI.createBtn(btnNum, ButtonType.RESPONSIVE);
+            Platform.runLater(() -> {
+                // Update the screen with a responsive button
+                screenUI.createBtn(btnNum, ButtonType.RESPONSIVE);
+            });
         } else {
-            screenUI.createBtn(btnNum, ButtonType.MUTUALLY_EXCLUSIVE);
+            Platform.runLater(() -> {
+                // Update the screen with a mutually exclusive button
+                screenUI.createBtn(btnNum, ButtonType.MUTUALLY_EXCLUSIVE);
+            });
         }
     }
 
@@ -397,8 +414,9 @@ public class Screen implements Runnable{
         if(screenUI != null) {
             screenUI.setBlank();
         }
-        System.out.println(btnString(pressedBtn)); //TODO delete this
-        ioServer.send(btnString(pressedBtn));
+        String btnS = btnString(pressedBtn);
+        System.out.println(btnS); //TODO delete this
+        ioServer.send(btnS);
     }
     /**
      * for communicating with the Main System
