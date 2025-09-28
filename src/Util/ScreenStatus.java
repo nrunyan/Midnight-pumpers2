@@ -12,7 +12,9 @@ public enum ScreenStatus {
     // Customer Starts fueling
     START("start"),
     // Customer Has Ended the transaction
-    END("end");
+    END("end"),
+    // Error, used a getter in incorrect context
+    ERROR("error");
     private String string; // string representation of this Screen Status
     ScreenStatus(String statusStr) {
         string = statusStr;
