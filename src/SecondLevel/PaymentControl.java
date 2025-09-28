@@ -12,7 +12,7 @@ import Util.PortAddresses;
 public class PaymentControl {
     private IOPort bonkClient;
     private IOPort CCReaderClient;
-    private CreditCardEnum creditCardState=CreditCardEnum.NotPresent;  //THIS IS JUST FOR TESTING, THIS should be changed to a state enum
+    private CreditCardEnum creditCardState=CreditCardEnum.NotPresent;
 
     /**
      * Creates client ioports to talk to the bank and ccReader. Bank shouldn't say anything other
@@ -100,6 +100,7 @@ public class PaymentControl {
      * @param readerMessage what the ccreader says
      */
     private void handleReaderMessage(String readerMessage){
+        creditCardState=CreditCardEnum.WaitingOnBonk;
         bonkClient.send(readerMessage);
         //I don't think anything else needs to happen here
     }
