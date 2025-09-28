@@ -4,6 +4,7 @@ import IOPort.IOPort;
 import Util.MarkdownConstants;
 import Util.MarkdownLanguage;
 import Util.PortAddresses;
+import Util.ScreenStatus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +14,9 @@ import java.util.List;
  * The customer API provides the functionality for retrieving information from the screen.
  */
 public class Customer { //TODO: this should not be a thread (for testing purposes)
-    // split messages by the ':' character
+    // the current gas prices
+    private List<Double> inUseGas = null;
+    //For splitting input from button presses
     private final String REGEX = ":";
 
     //The IO Port from Customer to Screen
@@ -36,8 +39,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
 //    @Override
 //    public void run() {
 //        int indx = 1;
-//        setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
+////        setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
 ////        setCharging(1, 3.00, 10.01, 30.03);
+//        setStartPumping(1, 3.00);
 ////        setFueling(1, 3.00, 10.01, 30.03);
 //        while(true){
 //            // Sleeping for test purposes
@@ -46,7 +50,14 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
 //            } catch (InterruptedException e) {
 //                throw new RuntimeException(e);
 //            }
+////            test(indx);
 //            int gasC = getGasChoice();
+//            System.out.println("gas choice: " + gasC);
+////            if (indx > 7) {
+////                indx = 1;
+////            } else {
+////                indx ++;
+////            }
 //        }
 //    }
 
@@ -68,10 +79,11 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
     }
 
     /**
-     * Returns where in the transaction the customer is null,cancel,pause,cancel,resume,start.
+     * Returns where in the transaction the customer is null,cancel,pause,resume,start.
      * @return should be some kind of message, putting object in right now as a placeholder
+     *         return null when
      */
-    public Object getStatus(){
+    public ScreenStatus getStatus(){
         return null;
     }
 
@@ -84,14 +96,36 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      */
     public int getGasChoice(){
         String btnCode = screenClient.get();
-        System.out.println("screenClient.get() = " + btnCode);
+//        System.out.println("screenClient.get() = " + btnCode);
         if (btnCode == null) {
             return -2;
         } else{
             String[] btns = btnCode.split(REGEX);
-//            if (btns.length)
-            //TODO: confirm selection, without gas grade, reset gas screen
-            //TODO: return gas selection via button codes
+            if (btns.length == 1) {
+                // one button was pressed
+                if (btns[0].equals("9")) {
+                    // Confirm button pressed, alone, reset the screen
+                    setSelectGrade(inUseGas);
+                } else  {
+                    // Cancel button pressed
+                    return -1;
+                }
+            } else if (btns.length == 2){
+                // two buttons pressed
+                if (btns[0].equals("8")) {
+                    // Cancel button pressed
+                    return -1;
+                } else {
+                    // Gas was selected
+                    try {
+                        // convert to Double
+                        int gasSelection = Integer.parseInt(btns[1]);
+                        return  gasSelection - 1;
+                    } catch (NumberFormatException e) {
+                        System.err.println("Invalid number format: " + e.getMessage());
+                    }
+                }
+            }
         }
         return 0;
     }
@@ -133,11 +167,23 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      * @param inUsePList the in use price list
      */
     public void setSelectGrade(List<Double> inUsePList){
+        //Store locally
+        inUseGas =inUsePList;
+
         // Convert List<Double> to double[] using streams
         double[] pListArray = inUsePList.stream().mapToDouble(Double::doubleValue).toArray();
 
         //Notify through IO Port
         screenClient.send(getGradeSelectionString(pListArray));
+    }
+
+    /**
+     * Notify the customer that they can start pumping
+     * @param gasSelection the gas selected
+     * @param selectionPrice the gas selection price
+     */
+    public void setStartPumping(int gasSelection, double selectionPrice) {
+        screenClient.send(getStartPumpingString(selectionPrice));
     }
 
     /**
@@ -300,6 +346,50 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
         tfc.addFieldCommand(confirm);
         bc.addButtonCommand(cancelBtn);
         bc.addButtonCommand(confirmBtn);
+
+        // return String representation of the commands
+        MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
+        return MarkdownLanguage.getMarkdown(cmds);
+    }
+
+    /**
+     * Get the string representation of the start pumping screen (awaiting
+     * customer to start pumping)
+     * @param selectP the selected price per gallon
+     * @return the string representation of the start pumping screen
+     */
+    private String getStartPumpingString(double selectP) {
+        int vPumped = 0;
+        int netCost = 0;
+        // Button and text field commands
+        MarkdownLanguage.ButtonCommands bc = new MarkdownLanguage.ButtonCommands();
+        MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
+
+        // Resume button, and its text field
+        MarkdownLanguage.TextFieldCommands.TextField stopTxt = new MarkdownLanguage.TextFieldCommands.TextField("Start Fueling", 8, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.ButtonCommands.Button stopBtn = new MarkdownLanguage.ButtonCommands.Button(8, false, true);
+
+        // End Transaction button, and its text field
+        MarkdownLanguage.TextFieldCommands.TextField endTxt = new MarkdownLanguage.TextFieldCommands.TextField("End Transaction", 9, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.ButtonCommands.Button endBtn = new MarkdownLanguage.ButtonCommands.Button(9, false, true);
+
+        // Gas selection price text
+        MarkdownLanguage.TextFieldCommands.TextField perG = new MarkdownLanguage.TextFieldCommands.TextField("$" + selectP + " per gallon", 11, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Normal, MarkdownConstants.BGColor.White);
+
+        // Volume Pumped
+        MarkdownLanguage.TextFieldCommands.TextField vTxt = new MarkdownLanguage.TextFieldCommands.TextField(vPumped + " gallons", 23, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+
+        // Net Cost
+        MarkdownLanguage.TextFieldCommands.TextField costTxt = new MarkdownLanguage.TextFieldCommands.TextField("$" + netCost, 45, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+
+        // Add Commands
+        tfc.addFieldCommand(perG);
+        tfc.addFieldCommand(stopTxt);
+        tfc.addFieldCommand(vTxt);
+        tfc.addFieldCommand(costTxt);
+        tfc.addFieldCommand(endTxt);
+        bc.addButtonCommand(stopBtn);
+        bc.addButtonCommand(endBtn);
 
         // return String representation of the commands
         MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
