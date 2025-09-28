@@ -14,6 +14,7 @@ public class GasStationServer extends Thread{
     public GasStationServer(){
         gasPrices=new double[]{1,2,3,4,5};
         gasGallons=new double[]{100,100,100,100,100};
+        System.out.println("IoPort being called");
         ioServer = new IOServer(PortAddresses.GAS_STATION_PORT);
         totalMoney = 0;
         this.start();

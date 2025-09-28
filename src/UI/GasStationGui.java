@@ -36,6 +36,11 @@ public class GasStationGui extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        getStage().show();
+    }
+
+    public Stage getStage(){
+        Stage primaryStage =new Stage();
         anchorPane = new AnchorPane();
         gasStationServer = new GasStationServer();
         gasPrices = new LinkedList<>();
@@ -47,9 +52,10 @@ public class GasStationGui extends Application {
 
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("Station");
-        primaryStage.show();
+
         Thread thread = new Thread(gasSHelper);
         thread.start();
+        return primaryStage;
     }
 
     /**
