@@ -1,13 +1,12 @@
 package UI;
 
-import components.Flowmeter;
-import components.Pump;
+import FXDrivers.Flowmeter;
+import FXDrivers.Pump;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
@@ -32,7 +31,7 @@ public class PumpAndFlowGUI extends Application {
     private Flowmeter flowmeter;
     private PFGUIhelper guiHelper;
     private Pump pump;
-    private Gas gas = new Gas();
+    private Gas gas;
     private FuelTank fuelTank;
 
     private Timeline timeline;
@@ -62,7 +61,8 @@ public class PumpAndFlowGUI extends Application {
         pump = new Pump();
         fuelTank.setTankColor(pump.getGasType());
         guiHelper = new PFGUIhelper();
-        flowmeter.setGas(gas);
+        this.gas = flowmeter.getGas();
+        //Should this be handled in the GUI? Seems like a logical object could help separate parts of this code
         pump.setGas(gas);
         guiHelper.setGas(gas);
         guiHelper.setFlowmeter(flowmeter);

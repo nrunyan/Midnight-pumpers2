@@ -1,11 +1,8 @@
-package components;
+package FXDrivers;
 
 import IOPort.*;
-import UI.PumpAndFlowGUI;
 import sim.Gas;
 import Util.*;
-
-import java.io.IOException;
 
 /**
  * This class is a device that turns on and off the gas flow based of the

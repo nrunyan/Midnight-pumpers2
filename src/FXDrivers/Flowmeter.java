@@ -1,4 +1,4 @@
-package components;
+package FXDrivers;
 
 import IOPort.*;
 import sim.Gas;
@@ -17,13 +17,13 @@ public class Flowmeter extends Thread {
 
     public Flowmeter(){
         this.ioServer = new IOServer(PortAddresses.FLOW_METER_PORT);
-        this.gas = null;
+        this.gas  = new Gas();
         this.gasFlow = 0;
         this.start();
     }
 
     public void sendFullMessage(){
-        tankFull=true;
+        tankFull=true; // do we need this??
         ioServer.send(CommunicationString.TURN_OFF);
         gas.turnOnGas();
     }
@@ -40,6 +40,8 @@ public class Flowmeter extends Thread {
         this.gas = gas;
     }
 
+    public Gas getGas() {return gas;}
+
     /*
     //TODO : send proper message for actuator
     This function checks to see if the gas is flowing and updates the flowmeter
@@ -53,10 +55,10 @@ public class Flowmeter extends Thread {
                 }
 
                 if (gas!=null&&gas.isOnOff()) {
-                    if(gasFlow>7.4){ //TODO:DONT HARDCODE THIS
+                    if(gasFlow>GasConstants.MAX_FLOW){
                         ioServer.send(CommunicationString.TURN_OFF);
                     }else{
-                        gasFlow += 0.02;
+                        gasFlow += GasConstants.FLOW_RATE;
                         ioServer.send(String.valueOf(gasFlow));
                     }
 

@@ -14,6 +14,9 @@ public class CommunicationString {
     public static String TURN_ON="Turn ON pump";
     public static String TURN_OFF="Turn OFF pump";
 
+    //Flowmeter Communication
+    public static String RESET_FLOW_METER = "RESET";
+
     //GasStationCommunication
     //I don't quite know if this is the way we want to do it
     //The reason Im thinking of it this way, is because I think it would

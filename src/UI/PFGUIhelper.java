@@ -1,6 +1,7 @@
 package UI;
 
-import components.*;
+import FXDrivers.Flowmeter;
+import FXDrivers.Pump;
 import javafx.animation.Timeline;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
@@ -75,7 +76,7 @@ public class PFGUIhelper implements Runnable{
     public void run() {
         while (flowmeter.connected()) {
 
-            if (gas.isOnOff()) {
+            if (flowmeter.getGas().isOnOff()) {
                 fuelTank.setTankColor(pump.getGasType());
                 timeline.play();
                 updatedText();

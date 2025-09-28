@@ -119,6 +119,7 @@ public class PumpAssembly extends Thread {
         connected=false;
         volumePumped=0.0;
         tankFull=false;
+        flowmeterClient.send(CommunicationString.RESET_FLOW_METER);
     }
 
 

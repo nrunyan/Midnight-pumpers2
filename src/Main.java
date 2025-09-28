@@ -1,11 +1,14 @@
+import FXDrivers.GasStationServer;
 import IOPort.IOPort;
+import SecondLevel.Customer;
+import SecondLevel.PaymentControl;
 import SecondLevel.PumpAssembly;
 import Util.CommunicationString;
 import Util.GasTypeEnum;
 import Util.PortAddresses;
 
 /**
- * Just a basic test main, handleMessages me last after starting the guis
+ * Just a basic test main, run me last after starting the guis
  */
 
 public class Main {
@@ -14,25 +17,10 @@ public class Main {
      * @param args no cmd args
      */
     public static void main(String[] args) {
-        PumpAssembly pumpAssemblyTest=new PumpAssembly();
-
-
-       while(true){
-           try {
-
-               Thread.sleep(2000);
-               pumpAssemblyTest.pumpOn(GasTypeEnum.GAS_TYPE_1);
-               System.out.println("Trying to turn gas on");
-               Thread.sleep(2000);
-               System.out.println(pumpAssemblyTest.getGasVolume());
-               System.out.println("trying to get volume");
-               Thread.sleep(2000);
-               pumpAssemblyTest.pumpOff();
-               System.out.println("trying to turn gas off");
-
-           } catch (InterruptedException e) {
-               throw new RuntimeException(e);
-           }
-       }
+        PaymentControl pc = new PaymentControl();
+        Customer cust = new Customer();
+        GasStationServer gasStationServer = new GasStationServer();
+        PumpAssembly pump = new PumpAssembly();
+        PumpManager pm = new PumpManager(pc, cust,gasStationServer,pump);
     }
 }
