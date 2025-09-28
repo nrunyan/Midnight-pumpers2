@@ -22,7 +22,7 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
     private final String REGEX = ":";
 
     //The IO Port from Customer to Screen
-    private IOPort screenClient;
+    private final IOPort screenClient;
 
     /**
      * Creates client IOPort to talk to the Screen. Customer receives button
@@ -65,6 +65,7 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
 
     /**
      * A private method to demonstarte screen setting
+     * For testing purposes
      * @param screenNum the screen number
      */
     private void test(int screenNum) {
@@ -158,7 +159,6 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
      */
     public int getGasChoice(){
         String btnCode = screenClient.get();
-//        System.out.println("screenClient.get() = " + btnCode);
         if (btnCode == null) {
             return -2;
         } else{

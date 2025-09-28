@@ -3,8 +3,6 @@ package UI;
 
 import FXDrivers.Screen;
 import SecondLevel.Customer;
-import Util.MarkdownConstants;
-import Util.MarkdownLanguage;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
