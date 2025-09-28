@@ -20,8 +20,6 @@ import java.util.List;
 // - Connect to IO Port
 public class Screen extends Thread{
     // Constants
-    private final String REGEX_0 = ":"; // split messages by the ':' character
-    private final String REGEX_1 = "-"; // split messages by the '-' character
     private final int NULL_BTN    =  -1; // signifies no button selected
 
     // Button Tracking
