@@ -15,6 +15,7 @@ import java.util.Random;
 public class Bonk {
     private IOServer server;
     private Random random=new Random(19);
+    private double moneyMade=0.0;
 
     /**
      * So even though this isn't a GUI, and may never be, it still should be treated
@@ -31,12 +32,18 @@ public class Bonk {
     public void ApproveOrDeny(){
         String msg=server.get();
         if(msg!=null){
-            // int ccNum=Integer.parseInt(msg); doesnt work lmao hdahahhqmsdsdjugigi
-            if(random.nextInt()%2==0){
-                server.send(CommunicationString.APPROVED);
+            if(msg.startsWith("$")){
+                moneyMade+=Double.valueOf(msg.substring(1));
             }else{
-                server.send(CommunicationString.DENIED);
+                // int ccNum=Integer.parseInt(msg); doesnt work lmao hdahahhqmsdsdjugigi
+                if(random.nextInt()%2==0){
+                    server.send(CommunicationString.APPROVED);
+                }else{
+                    server.send(CommunicationString.DENIED);
+                }
+
             }
+
 
         }else{
             System.out.println("bonk gets null msg");
