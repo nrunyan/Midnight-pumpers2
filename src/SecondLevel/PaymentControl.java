@@ -29,7 +29,7 @@ public class PaymentControl {
      * Runs this operation.
      */
 
-    public void run() {
+    public void handleMessages() {
         try {
             String bonkMessage=bonkClient.get();
             String readerMessage=CCReaderClient.get();
@@ -74,20 +74,31 @@ public class PaymentControl {
      * This should be a state enum eventually
      * @return true if approved, false else
      */
-    public CreditCardEnum getApprovmentStatus(){
+    public CreditCardEnum getVerificationStatus(){
         return creditCardState;
     }
+
+    /**
+     * Records bank message and sends it to ccreader
+     * @param bonkMessage approved, or denied, no handling for if the bank
+     *                    sends you a null/ no card message
+     */
 
     private void handleBankMessage(String bonkMessage){
         CCReaderClient.send(bonkMessage);
         if(bonkMessage.equals(CommunicationString.APPROVED)){
             //Eventually we want to abstract this to an enum state thing
             creditCardState=CreditCardEnum.Accepted;
-        }else{
+        }else if(bonkMessage.equals(CommunicationString.DENIED)){
             creditCardState=CreditCardEnum.Declined;
         }
 
     }
+
+    /**
+     * deals with the credit card messages.
+     * @param readerMessage what the ccreader says
+     */
     private void handleReaderMessage(String readerMessage){
         bonkClient.send(readerMessage);
         //I don't think anything else needs to happen here

@@ -11,7 +11,7 @@ public class TestThreadRemoval {
     public static void main(String[] args) {
         PaymentControl paymentControlTest = new PaymentControl();
         while(true){
-            paymentControlTest.run();
+            paymentControlTest.handleMessages();
             try {
                 Thread.sleep(1000); // long wait time that will be reflected in testing
             } catch (InterruptedException e) {
