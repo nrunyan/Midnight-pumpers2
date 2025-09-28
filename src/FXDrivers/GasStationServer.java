@@ -59,8 +59,13 @@ public class GasStationServer extends Thread{
     }
 
     private void gasUsed(int gasG, double gasV){
-        gasGallons[gasG-1] -= gasV;
-        if(gasGallons[gasG-1] < 0){
+        if(gasGallons[gasG-1] > 0){
+            gasGallons[gasG-1] -= gasV;
+        }else {
+            gasGallons[gasG-1] = 0;
+        }
+
+        if(gasGallons[gasG-1] <= 0){
             gasPrices[gasG-1] = 0;
         }
     }
@@ -123,11 +128,14 @@ public class GasStationServer extends Thread{
 
     @Override
     public void run() {
-
+        boolean check = true;
         ON =true;
-        sendOutInfo();
         while (true){
             try {
+                if(ioServer.CONNECTED && check){
+                    sendOutInfo();
+                    check =false;
+                }
                 makePrices();
                 handleMessage();
                 if(!ON){
