@@ -18,6 +18,7 @@ public class IOServer {
     private PrintWriter out;
     private int portNumber;
     public volatile boolean ON = false;
+    public volatile boolean CONNECTED = false;
     /**
      *  This enables the differentation between read and get.
      *  It stores any message received in this variable, and clears it when
@@ -49,7 +50,7 @@ public class IOServer {
                     System.out.println("Connecting on "+portNumber);
                     in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
-
+                    CONNECTED = true;
                     String msg; //THIS IS WHY WE NEED THREADS
                     //THIS WILL HANG ALL OUR STUFF IF WE DON'T HAVE THREADS
                     while ((msg = in.readLine()) != null) {
