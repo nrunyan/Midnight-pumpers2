@@ -23,7 +23,7 @@ public class TestPumpAssembly {
                pumpAssemblyTest.pumpOn(GasTypeEnum.GAS_TYPE_1);
                System.out.println("Trying to turn gas on");
                Thread.sleep(2000);
-               System.out.println(pumpAssemblyTest.getGasPumped());
+               System.out.println(pumpAssemblyTest.getGasVolume());
                System.out.println("trying to get volume");
                Thread.sleep(2000);
                pumpAssemblyTest.pumpOff();
