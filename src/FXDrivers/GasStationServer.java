@@ -29,10 +29,10 @@ public class GasStationServer extends Thread{
 
     /**
      * Messages Getting
-     * "1:transtationAmount" adds transtion to total money
+     * "1:transtationAmount:x:y" x = gastype y=gasAmount adds transtion to
+     * total money
      * "NEW_PRICES" tells GasStationSever to sendPrices
      * "ON?" GasStation2L is asking if the station is on
-     * "2:x:y" x = gastype y=gasAmount
      */
 
     /**
@@ -45,39 +45,13 @@ public class GasStationServer extends Thread{
             String[] message = msg.split(":");
             //1:transtationAmount
             if(message[0].equals("1")){ // how much money made from transaction
-                setTotalMoney(Double.parseDouble(message[1])); //adds the
-                // transaction fee to money made
-                makePrices();// every transaction we change the price I
-                // guess, if we want we can change when we update prices
-            } else if (msg.equals("NEW_PRICES")) {
-                sendOutPrices();
-            } else if (msg.equals("ON?")) {
-                sendIsON();
-            } else if(message[0].equals("2")){// will be a message with how
-                // much gas was used for some gastype of string form "2:x:y"
-                // where
-                // x = gastype y=gasAmount
-                int x = Integer.parseInt(message[1]); // This will be "x"
-                double y = Double.parseDouble(message[2]); // This will be "y"
-                gasUsed(x,y);
+                receiveInfo(Double.parseDouble(message[1]),
+                        Integer.parseInt(message[2]),
+                        Double.parseDouble(message[3]));
+                sendOutInfo();
             }
         }
 
-    }
-
-    public void sendIsON() {
-        if(ON){
-            ioServer.send("ON");
-        }else {
-            ioServer.send("OFF");
-        }
-    }
-    public void sendMoney(){
-        ioServer.send(String.valueOf(String.format("2:%.2f",
-                totalMoney)));
-        //String form "2:totalMoney" 2 is used for handling again we can
-        // change how we want to handle this string so dont be afraid to make
-        // changes if its easier to handle it a different way
     }
 
     public double getTotalMoney() {
@@ -90,8 +64,9 @@ public class GasStationServer extends Thread{
             gasPrices[gasG-1] = 0;
         }
     }
-    private void setTotalMoney(double money){
+    private void receiveInfo(double money,int gasType, double volume){
         totalMoney += money;
+        gasUsed(gasType,volume);
     }
 
     /**
@@ -102,12 +77,18 @@ public class GasStationServer extends Thread{
     public void updateGasPrices(int index, double newAmount){
         gasPrices[index]=newAmount;
     }
-    public void sendOutPrices(){
+    public void sendOutInfo(){
         //dont know if we want this but I thought it might be easy to split
         // up the string into an array of string but I might be dumb
-        //String Form "1:p1:p2:p3:p4:p5" p_i = price of grade i the 1 lets
+        //String Form "1:p1:p2:p3:p4:p5:ON_OFF" p_i = price of grade i the 1
+        // lets
         // us know how we should handle the string
-        ioServer.send(String.format("1:%.2f:%.2f:%.2f:%.2f:%.2f",
+        //
+        String on = "OFF";
+        if(ON){
+            on = "ON";
+        }
+        ioServer.send(String.format("1:%.2f:%.2f:%.2f:%.2f:%.2f:"+on,
                 gasPrices[0],gasPrices[1],gasPrices[2],gasPrices[3],
                 gasPrices[4]));
     }
@@ -144,10 +125,14 @@ public class GasStationServer extends Thread{
     public void run() {
 
         ON =true;
+        sendOutInfo();
         while (true){
             try {
                 makePrices();
                 handleMessage();
+                if(!ON){
+                    sendOutInfo();
+                }
                 Thread.sleep(1000);
 
             } catch (InterruptedException e) {
