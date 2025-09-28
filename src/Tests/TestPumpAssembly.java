@@ -2,6 +2,7 @@ package Tests;
 
 import SecondLevel.PumpAssembly;
 import Util.CommunicationString;
+import Util.GasTypeEnum;
 
 /**
  * Just a basic test main, run me last after starting the guis
@@ -19,7 +20,7 @@ public class TestPumpAssembly {
            try {
 
                Thread.sleep(2000);
-               pumpAssemblyTest.pumpOn(CommunicationString.GAS1_SELECTED);
+               pumpAssemblyTest.pumpOn(GasTypeEnum.GAS_TYPE_1);
                System.out.println("Trying to turn gas on");
                Thread.sleep(2000);
                System.out.println(pumpAssemblyTest.getGasPumped());

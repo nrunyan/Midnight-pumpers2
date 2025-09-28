@@ -2,6 +2,7 @@ package SecondLevel;
 
 import IOPort.IOPort;
 import Util.CommunicationString;
+import Util.GasTypeEnum;
 import Util.PortAddresses;
 
 public class PumpAssembly extends Thread {
@@ -67,13 +68,31 @@ public class PumpAssembly extends Thread {
         return gasOn;
     }
 
+    /**
+     * Gets the total volume of gas pumped
+     * @return gas volume
+     */
+
     public double getGasPumped() {
         return volumePumped;
     }
 
-    public void pumpOn(String gasType){
+    /**
+     * Is the hose/nozzle connected to the car
+     * @return true if connected, false otherwise
+     */
+    public boolean isConnected() {
+        return connected;
+    }
+
+    /**
+     * Turns the pump on if the hose is connected
+     * @param gasType a gas type 0-5 passed in as a screen
+     */
+
+    public void pumpOn(GasTypeEnum gasType){
         if(connected){
-            pumpClient.send(gasType);
+            pumpClient.send(gasType.label);
             gasOn=true;
         }else {
             System.out.println("HOSE NOT CONNECTED");

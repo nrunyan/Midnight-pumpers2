@@ -1,6 +1,7 @@
 import IOPort.IOPort;
 import SecondLevel.PumpAssembly;
 import Util.CommunicationString;
+import Util.GasTypeEnum;
 import Util.PortAddresses;
 
 /**
@@ -20,7 +21,7 @@ public class Main {
            try {
 
                Thread.sleep(2000);
-               pumpAssemblyTest.pumpOn(CommunicationString.GAS1_SELECTED);
+               pumpAssemblyTest.pumpOn(GasTypeEnum.GAS_TYPE_1);
                System.out.println("Trying to turn gas on");
                Thread.sleep(2000);
                System.out.println(pumpAssemblyTest.getGasPumped());
