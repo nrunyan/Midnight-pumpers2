@@ -3,7 +3,7 @@ package Tests;
 import SecondLevel.PaymentControl;
 
 /**
- * Another test main, run after starting the GUIs THIS IS LEGACY, THIS WON'T WORK ANYMORE
+ * Another test main, handleMessages after starting the GUIs THIS IS LEGACY, THIS WON'T WORK ANYMORE
  */
 public class TestPaymentControl {
     /**

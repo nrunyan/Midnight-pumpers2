@@ -5,7 +5,7 @@ import Util.GasTypeEnum;
 import Util.PortAddresses;
 
 /**
- * Just a basic test main, run me last after starting the guis
+ * Just a basic test main, handleMessages me last after starting the guis
  */
 
 public class Main {
@@ -24,7 +24,7 @@ public class Main {
                pumpAssemblyTest.pumpOn(GasTypeEnum.GAS_TYPE_1);
                System.out.println("Trying to turn gas on");
                Thread.sleep(2000);
-               System.out.println(pumpAssemblyTest.getGasPumped());
+               System.out.println(pumpAssemblyTest.getGasVolume());
                System.out.println("trying to get volume");
                Thread.sleep(2000);
                pumpAssemblyTest.pumpOff();

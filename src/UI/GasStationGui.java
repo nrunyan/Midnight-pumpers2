@@ -56,7 +56,7 @@ public class GasStationGui extends Application {
      * Make the anAnchor pain and hands the Texts to GasSHelper
      * If you want to add an object to the pane and have the intent to make
      * changes to it after the gui has been made, make sure you give that
-     * object to GasSHelper and change it there in the run method
+     * object to GasSHelper and change it there in the handleMessages method
      */
     private void makeAnchor() {
         stationPic.setFitHeight(400);

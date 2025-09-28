@@ -5,7 +5,7 @@ import Util.CommunicationString;
 import Util.GasTypeEnum;
 
 /**
- * Just a basic test main, run me last after starting the guis
+ * Just a basic test main, handleMessages me last after starting the guis
  */
 
 public class TestPumpAssembly {

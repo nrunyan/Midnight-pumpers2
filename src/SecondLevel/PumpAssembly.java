@@ -73,7 +73,7 @@ public class PumpAssembly extends Thread {
      * @return gas volume
      */
 
-    public double getGasPumped() {
+    public double getGasVolume() {
         return volumePumped;
     }
 
@@ -81,7 +81,7 @@ public class PumpAssembly extends Thread {
      * Is the hose/nozzle connected to the car
      * @return true if connected, false otherwise
      */
-    public boolean isConnected() {
+    public boolean getHoseConnected() {
         return connected;
     }
 
