@@ -75,8 +75,8 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
             case 3 -> setWaitingAuthorization();
             case 4 -> setCardDeclined();
             case 5 -> setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
-            case 6 -> setCharging(1, 3.00, 10.01, 30.03);
-            case 7 -> setFueling(1, 3.00, 10.01, 30.03);
+            case 6 -> setCharging( 3.00, 10.01, 30.03);
+            case 7 -> setFueling( 3.00, 10.01, 30.03);
             case 8 -> setGoodBye();
         }
     }

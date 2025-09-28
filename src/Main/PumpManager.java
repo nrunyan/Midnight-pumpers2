@@ -26,6 +26,11 @@ public class PumpManager {
     private List<Double> In_Use_Price_List;
     private GasTypeEnum Gas_Grade_Selection;
     private CreditCardEnum Credit_Card_Status;
+    private double unitPrice;
+    private double gasVolume;
+    private double dollarAmount;
+    private int gasIndex;
+    private double totalPrice;
 
     public PumpManager(PaymentControl paymentControl, Customer customer, GasStation gasStation, PumpAssembly pumpAssembly) {
         this.paymentControl = paymentControl;
@@ -67,7 +72,7 @@ public class PumpManager {
         pumpAssembly.reset();
         Gas_Grade_Selection = GasTypeEnum.NO_SELECTION;
         do {
-            if(checkOff()){
+            if (checkOff()) {
                 return;
             }
             gasStation.handleMessage();
@@ -83,7 +88,7 @@ public class PumpManager {
         customer.setWelcome();
         In_Use_Price_List = New_Price_List;
         do {
-            if(checkOff()){
+            if (checkOff()) {
                 return;
             }
             paymentControl.handleMessages();
@@ -98,13 +103,14 @@ public class PumpManager {
             cardDeclined();
         }
     }
+
     /**
      * only called if waiting on the bank for authorization
      */
-    private void pendingAuthorization(){
+    private void pendingAuthorization() {
         customer.setWaitingAuthorization();
-        do{
-            if(checkOff()){
+        do {
+            if (checkOff()) {
                 return;
             }
             paymentControl.handleMessages();
@@ -119,8 +125,8 @@ public class PumpManager {
     private void cardDeclined() {
         customer.setCardDeclined();
         Timer timer = new Timer(5);
-        while (!timer.timeout()){
-            if(checkOff()){
+        while (!timer.timeout()) {
+            if (checkOff()) {
                 return;
             }
         }
@@ -133,13 +139,15 @@ public class PumpManager {
     private void selectFuel() {
         customer.setSelectGrade(In_Use_Price_List);
         Timer timer = new Timer(120);
-        do{
-            if(timer.timeout()){
+        do {
+            if (timer.timeout()) {
                 standBy();
                 return;
             }
-            if(checkOff()){return;}
-        } while(Gas_Grade_Selection == GasTypeEnum.NO_SELECTION);
+            if (checkOff()) {
+                return;
+            }
+        } while (Gas_Grade_Selection == GasTypeEnum.NO_SELECTION);
         idle();
     }
 
@@ -148,22 +156,24 @@ public class PumpManager {
      * This is the idle stage, sets start pumping times out for two min
      */
     private void idle() {
-        int i = seti();
+        seti();
         ScreenStatus screenStatus;
-        customer.setStartPumping(In_Use_Price_List.get(i));
+        customer.setStartPumping(In_Use_Price_List.get(gasIndex));
         Timer timer = new Timer(120);
-        do{
-            if(timer.timeout()){
+        do {
+            if (timer.timeout()) {
                 standBy();
                 return;
             }
-           if(checkOff()){return;}
-           screenStatus = customer.getStatus();
-           if(screenStatus == ScreenStatus.CANCEL){
-               standBy();
-               return;
-           }
-        } while(!(screenStatus == ScreenStatus.START && pumpAssembly.getHoseConnected()) );
+            if (checkOff()) {
+                return;
+            }
+            screenStatus = customer.getStatus();
+            if (screenStatus == ScreenStatus.CANCEL) {
+                standBy();
+                return;
+            }
+        } while (!(screenStatus == ScreenStatus.START && pumpAssembly.getHoseConnected()));
         fueling();
     }
 
@@ -173,23 +183,64 @@ public class PumpManager {
     private void fueling() {
         pumpAssembly.pumpOn(Gas_Grade_Selection);
         ScreenStatus status;
-        do{
-            if (checkOff()) {return;}
-
-            int i = seti();
-            double u = In_Use_Price_List.get(i);
-            double v = pumpAssembly.getGasVolume();
-            double d = calculateTotalPrice(u,v);
-            customer.setFueling(u, v, d);
+        boolean pause;
+        boolean stop;
+        boolean tankfull;
+        do {
+            if (checkOff()) {
+                return;
+            }
+            setUVD();
+            customer.setFueling(unitPrice, gasVolume, totalPrice);
             status = customer.getStatus();
-
-        } while(!(pauseCondtion(status)));
-
-
-        // -!(pauseCondtion(status) || stopCondition(status))
+            pause = pauseCondtion(status);
+            stop = stopCondition(status);
+            tankfull = pumpAssembly.isTankFull();
+        } while (!(pause || stop || tankfull));
+        if (pause) {
+            pause();
+        } else {
+            goodBye();
+        }
 
     }
 
+    /**
+     * active if pause button pressed
+     * updates paused screen
+     */
+    private void pause() {
+        pumpAssembly.pumpOff();
+        Timer timer = new Timer(120);
+        setUVD();
+        customer.setCharging(unitPrice, gasVolume, totalPrice);
+        ScreenStatus screenStatus = ScreenStatus.NO_INPUT;
+        do {
+            if (timer.timeout() || screenStatus == ScreenStatus.END) {
+                goodBye();
+                return;
+            }
+            if (checkOff()) {return;}
+            screenStatus = customer.getStatus();
+        } while (!(pumpAssembly.getHoseConnected() && (screenStatus == ScreenStatus.RESUME)));
+        if (screenStatus == ScreenStatus.RESUME) {
+            fueling();
+        }
+    }
+
+    /**
+     * goodbye displays a goodbye message, sends transaction info to the bank and gas station
+     */
+    private void goodBye() {
+        customer.setGoodBye();
+        Timer timer = new Timer(10);
+        setUVD();
+        paymentControl.sendTransactionInfo(totalPrice);
+        gasStation.sendTransactionInfo(totalPrice, gasVolume, Gas_Grade_Selection);
+        while(timer.timeout()) {
+            standBy();
+        }
+    }
 
 
     /**
@@ -219,23 +270,34 @@ public class PumpManager {
 
     /**
      * Helper for idle
+     *
      * @return an index for the In_Use_Price_List
      */
-    private int seti() {
-        int i;
+    private void seti() {
         switch (Gas_Grade_Selection) {
-            case GasTypeEnum.GAS_TYPE_1 -> i = 0;
-            case GasTypeEnum.GAS_TYPE_2 -> i = 1;
-            case GasTypeEnum.GAS_TYPE_3 -> i = 2;
-            case GasTypeEnum.GAS_TYPE_4 -> i = 3;
-            case GasTypeEnum.GAS_TYPE_5 -> i = 4;
+            case GasTypeEnum.GAS_TYPE_1 -> gasIndex = 0;
+            case GasTypeEnum.GAS_TYPE_2 -> gasIndex = 1;
+            case GasTypeEnum.GAS_TYPE_3 -> gasIndex = 2;
+            case GasTypeEnum.GAS_TYPE_4 -> gasIndex = 3;
+            case GasTypeEnum.GAS_TYPE_5 -> gasIndex = 4;
             default -> {
                 System.out.println("invalid Gas_Grade_Selection");
-                return 5;
+                gasIndex = 5;
             }
         }
-        return i;
     }
+
+    /**
+     * Sets the unit price
+     */
+    private void setUVD(){
+        seti();
+        unitPrice = In_Use_Price_List.get(gasIndex);
+        gasVolume = pumpAssembly.getGasVolume();
+        totalPrice = calculateTotalPrice();
+
+    }
+
 
     /**
      * @param status customer status
@@ -245,24 +307,25 @@ public class PumpManager {
         return (status == ScreenStatus.PAUSE || !pumpAssembly.getHoseConnected());
     }
 
-//    /**
-//     * @param status customer status
-//     * @return true if customer ends or the tank is full
-//     */
-//    private boolean stopCondition(ScreenStatus status) {
-//        return status == ScreenStatus.END || pumpAssembly.
-//                //tank full
-//    }    /**
-
+    /**
+     * @param status customer status
+     * @return true if customer ends or the tank is full
+     */
+    private boolean stopCondition(ScreenStatus status) {
+        return status == ScreenStatus.END || pumpAssembly.isTankFull();
+        //tank full
+    }
 
     /**
+     * /**
      * checks if the gas station is off
      * calls off to reset the pump manager
+     *
      * @return true if off
      */
-    private boolean checkOff(){
+    private boolean checkOff() {
         gasStation.handleMessage();
-        if(!gasStation.checkPower()){
+        if (!gasStation.checkPower()) {
             off();
             return true;
         }
@@ -270,11 +333,10 @@ public class PumpManager {
     }
 
     /**
-     *
      * @return
      */
-    private double calculateTotalPrice(double u, double v){
-        return u * v;
+    private double calculateTotalPrice() {
+        return unitPrice * gasVolume;
     }
 
 }
