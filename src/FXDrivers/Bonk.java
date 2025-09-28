@@ -1,6 +1,7 @@
 package FXDrivers;
 
 import IOPort.IOServer;
+import UI.BankGUI;
 import Util.CommunicationString;
 import Util.PortAddresses;
 
@@ -15,6 +16,7 @@ import java.util.Random;
 public class Bonk {
     private IOServer server;
     private Random random=new Random(19);
+    private BankGUI bankGUI = null;
     private double moneyMade=0.0;
 
     /**
@@ -34,11 +36,23 @@ public class Bonk {
         if(msg!=null){
             if(msg.startsWith("$")){
                 moneyMade+=Double.valueOf(msg.substring(1));
+                if (bankGUI != null) {
+                    // Update GUI if it exists
+                    bankGUI.updateRevenue(moneyMade);
+                }
             }else{
                 // int ccNum=Integer.parseInt(msg); doesnt work lmao hdahahhqmsdsdjugigi
                 if(random.nextInt()%2==0){
+                    if (bankGUI != null) {
+                        // Update GUI if it exists
+                        bankGUI.displayApproved(msg);
+                    }
                     server.send(CommunicationString.APPROVED);
                 }else{
+                    if (bankGUI != null) {
+                        // Update GUI if it exists
+                        bankGUI.displayDenied(msg);
+                    }
                     server.send(CommunicationString.DENIED);
                 }
 
@@ -69,6 +83,15 @@ public class Bonk {
         }
 
     }
+
+    /**
+     * Set this Bank's Bank Gui
+     * @param bankGUI the bank gui to update
+     */
+    public void setBankGUI(BankGUI bankGUI) {
+        this.bankGUI = bankGUI;
+    }
+
     /**
      * Gang correct me if im wrong but the bonk just has to respond to msgs right?
      */
