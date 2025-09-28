@@ -219,7 +219,8 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
                 }
             }
         }
-        return 0;
+        // This only happens when the screen needs refreshed
+        return -2;
     }
 
     /**
