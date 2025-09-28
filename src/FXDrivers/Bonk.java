@@ -4,6 +4,7 @@ import IOPort.IOServer;
 import UI.BankGUI;
 import Util.CommunicationString;
 import Util.PortAddresses;
+import javafx.application.Platform;
 
 import java.util.Random;
 
@@ -38,20 +39,26 @@ public class Bonk {
                 moneyMade+=Double.valueOf(msg.substring(1));
                 if (bankGUI != null) {
                     // Update GUI if it exists
-                    bankGUI.updateRevenue(moneyMade);
+                    Platform.runLater(() -> {
+                        bankGUI.moneyTransfer(msg);
+                    });
                 }
             }else{
                 // int ccNum=Integer.parseInt(msg); doesnt work lmao hdahahhqmsdsdjugigi
                 if(random.nextInt()%2==0){
                     if (bankGUI != null) {
                         // Update GUI if it exists
-                        bankGUI.displayApproved(msg);
+                        Platform.runLater(() -> {
+                            bankGUI.displayApproved(msg);
+                        });
                     }
                     server.send(CommunicationString.APPROVED);
                 }else{
                     if (bankGUI != null) {
                         // Update GUI if it exists
-                        bankGUI.displayDenied(msg);
+                        Platform.runLater(() -> {
+                            bankGUI.displayDenied(msg);
+                        });
                     }
                     server.send(CommunicationString.DENIED);
                 }
@@ -63,6 +70,49 @@ public class Bonk {
             System.out.println("bonk gets null msg");
         }
 
+    }
+
+    /**
+     * approve or deny the following message
+     * This is for testing purposes
+     * @param msg
+     */
+    public void ApproveOrDeny(String msg) {
+        if(msg!=null){
+            if(msg.startsWith("$")){
+                moneyMade+=Double.valueOf(msg.substring(1));
+                if (bankGUI != null) {
+                    // Update GUI if it exists
+                    Platform.runLater(() -> {
+                        bankGUI.moneyTransfer(msg);
+                    });
+                }
+            }else{
+                // int ccNum=Integer.parseInt(msg); doesnt work lmao hdahahhqmsdsdjugigi
+                if(random.nextInt()%2==0){
+                    if (bankGUI != null) {
+                        // Update GUI if it exists
+                        Platform.runLater(() -> {
+                            bankGUI.displayApproved(msg);
+                        });
+                    }
+//                    server.send(CommunicationString.APPROVED);
+                }else{
+                    if (bankGUI != null) {
+                        // Update GUI if it exists
+                        Platform.runLater(() -> {
+                            bankGUI.displayDenied(msg);
+                        });
+                    }
+//                    server.send(CommunicationString.DENIED);
+                }
+
+            }
+
+
+        }else{
+            System.out.println("bonk gets null msg");
+        }
     }
 
     /**
