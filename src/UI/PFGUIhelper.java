@@ -18,6 +18,7 @@ public class PFGUIhelper implements Runnable{
     private double startR1 = 45;
     private double startR2 = 135;
     private Timeline timeline;
+    private PumpAndFlowGUI.FuelTank fuelTank;
     PFGUIhelper(){
         this.text = new Text("00.00");
         this.rotate1 = new Rotate();
@@ -31,6 +32,10 @@ public class PFGUIhelper implements Runnable{
     }
     public void setTimeline(Timeline timeline){
         this.timeline = timeline;
+    }
+
+    public void setFuelTank(PumpAndFlowGUI.FuelTank fuelTank) {
+        this.fuelTank = fuelTank;
     }
 
     public void setPump(Pump pump) {
@@ -71,6 +76,7 @@ public class PFGUIhelper implements Runnable{
         while (flowmeter.connected()) {
 
             if (gas.isOnOff()) {
+                fuelTank.setTankColor(pump.getGasType());
                 timeline.play();
                 updatedText();
                 rotate1.setAngle(startR1 + 3);

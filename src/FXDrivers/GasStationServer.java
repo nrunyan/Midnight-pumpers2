@@ -20,6 +20,22 @@ public class GasStationServer extends Thread{
     }
 
     /**
+     * Send out strings Forms
+     * "1:p1:p2:p3:p4:p5" sends gas prices
+     *
+     * "ON" gasStation on
+     * "OFF" gasStation off
+     */
+
+    /**
+     * Messages Getting
+     * "1:transtationAmount" adds transtion to total money
+     * "NEW_PRICES" tells GasStationSever to sendPrices
+     * "ON?" GasStation2L is asking if the station is on
+     * "2:x:y" x = gastype y=gasAmount
+     */
+
+    /**
     In my mind im seeing the messages coming in the form "id:Message" where id
     is used to know how to handle the message
      */
@@ -27,6 +43,7 @@ public class GasStationServer extends Thread{
         String msg = ioServer.get();
         if(msg != null){
             String[] message = msg.split(":");
+            //1:transtationAmount
             if(message[0].equals("1")){ // how much money made from transaction
                 setTotalMoney(Double.parseDouble(message[1])); //adds the
                 // transaction fee to money made
@@ -36,10 +53,7 @@ public class GasStationServer extends Thread{
                 sendOutPrices();
             } else if (msg.equals("ON?")) {
                 sendIsON();
-            } else if (msg.equals("MONEY")){
-                sendMoney();
-            }
-            else if(message[0].equals("2")){// will be a message with how
+            } else if(message[0].equals("2")){// will be a message with how
                 // much gas was used for some gastype of string form "2:x:y"
                 // where
                 // x = gastype y=gasAmount
