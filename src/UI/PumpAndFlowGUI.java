@@ -41,7 +41,7 @@ public class PumpAndFlowGUI extends Application {
     final double durration =20;
     @Override
     public void start(Stage primaryStage) throws Exception {
-        fuelTank = new FuelTank(150, 200, 100, 50,0);
+        fuelTank = new FuelTank(120, 150, 100, 50,0);
         fuelTank.getTankPane().setBackground(Background.fill(Color.BLACK));
         //fuelTank.getTankPane().setLayoutX(1000);
         HBox fuelroot = new HBox(50, fuelTank.getTankPane());
@@ -60,6 +60,7 @@ public class PumpAndFlowGUI extends Application {
 
         flowmeter = new Flowmeter();
         pump = new Pump();
+        fuelTank.setTankColor(pump.getGasType());
         guiHelper = new PFGUIhelper();
         flowmeter.setGas(gas);
         pump.setGas(gas);
@@ -67,101 +68,108 @@ public class PumpAndFlowGUI extends Application {
         guiHelper.setFlowmeter(flowmeter);
         guiHelper.setPump(pump);
         guiHelper.setTimeline(timeline);
+        guiHelper.setFuelTank(fuelTank);
         Group root = new Group();
-        anchorPane.setPrefHeight(750);
-        anchorPane.setPrefWidth(1000);
+        anchorPane.setPrefHeight(400);
+        anchorPane.setPrefWidth(500);
         anchorPane.setBackground(Background.fill(Color.BLACK));
         fuelroot.setBackground(Background.fill(Color.BLACK));
         makeAnchor();
-
         root.getChildren().add(anchorPane);
         root.getChildren().add(fuelroot);
         //fuelroot.setAlignment(Pos.CENTER);
-        fuelroot.setLayoutX(700);
+        fuelroot.setLayoutX(50);
 
-
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
         primaryStage.setTitle("PumpFlow");
         primaryStage.show();
+        anchorPane.prefWidthProperty().bind(scene.widthProperty());
+        anchorPane.prefHeightProperty().bind(scene.heightProperty());
         Thread thread2 = new Thread(guiHelper);
         thread2.start();
     }
     private void makeAnchor(){
-        double xs = 50;
-        double ys = 0;
-        Rectangle leftFirstPipe = new Rectangle(100-xs,400,550,100);
+        double xs = -50;
+        double ys = -120;
+        double rs = 0;
+        double ws =-20;
+        double hs =0;
+        double fs = 0;
+        double xcs = -50;
+        Rectangle leftFirstPipe = new Rectangle(50+xcs,400+ys,550+ws,100+hs);
         leftFirstPipe.setStroke(Color.BLUE);
         leftFirstPipe.setFill(Color.LIGHTBLUE);
 
-        Rectangle leftScrewBlock = new Rectangle(350-xs,375,50,150);
+        Rectangle leftScrewBlock = new Rectangle(300+xcs,375+ys,50,150+hs);
         leftScrewBlock.setStroke(Color.BLUE);
         leftScrewBlock.setFill(Color.LIGHTBLUE);
 
-        Rectangle rightFirstPipe = new Rectangle(625-xs,400,375,100);
+        Rectangle rightFirstPipe = new Rectangle(575+xcs,400+ys,375+ws,100+hs);
         rightFirstPipe.setStroke(Color.BLUE);
         rightFirstPipe.setFill(Color.LIGHTBLUE);
 
-        Rectangle rightScrewBlock = new Rectangle(700-xs,375,50,150);
+        Rectangle rightScrewBlock = new Rectangle(650+xcs,375+ys,50,150+hs);
         rightScrewBlock.setStroke(Color.BLUE);
         rightScrewBlock.setFill(Color.LIGHTBLUE);
 
-        Circle outerCircle = new Circle(550-xs, 450, 100); // centerX, centerY,
+        Circle outerCircle = new Circle(500+xcs, 450+ys, 100+rs); // centerX,
+        // centerY,
         // radius
         outerCircle.setFill(Color.BLUE);
 
         // Inner circle (the "hole")
-        Circle innerCircle = new Circle(550-xs, 450, 75); // centerX, centerY,
+        Circle innerCircle = new Circle(500+xcs, 450+ys, 75+rs); // centerX,
+        // centerY,
         // radius
         innerCircle.setFill(Color.WHITE); // Or any color to represent the hole
+
 
         // Subtract the inner circle from the outer circle to create the donut shape
         Shape donut = Shape.subtract(outerCircle, innerCircle);
         donut.setStroke(Color.RED);
         donut.setFill(Color.LIGHTPINK);
 
-        Circle pivot = new Circle(550-xs,450,20);
+        Circle pivot = new Circle(500+xcs,450+ys,20+rs);
         pivot.setFill(Color.LIGHTPINK);
         pivot.setStroke(Color.RED);
 
-        Rectangle valvePipe1 = new Rectangle(475-xs,437.5,150,25);
+        Rectangle valvePipe1 = new Rectangle(425+xcs,437.5+ys,150,25+hs);
         valvePipe1.setFill(Color.LIGHTPINK);
         valvePipe1.setStroke(Color.RED);
 
-        Rectangle valvePipe2 = new Rectangle(475-xs,437.5,150,25);
+        Rectangle valvePipe2 = new Rectangle(425+xcs,437.5+ys,150,25+hs);
         valvePipe2.setFill(Color.LIGHTPINK);
         valvePipe2.setStroke(Color.RED);
 
         Rotate rotate1 = new Rotate();
         rotate1.setAngle(45);
-        rotate1.setPivotX(550-xs);
-        rotate1.setPivotY(450);
+        rotate1.setPivotX(500+xcs);
+        rotate1.setPivotY(450+ys);
 
         Rotate rotate2 = new Rotate();
         rotate2.setAngle(135);
-        rotate2.setPivotX(550-xs);
-        rotate2.setPivotY(450);
+        rotate2.setPivotX(500+xcs);
+        rotate2.setPivotY(450+ys);
 
         ProgressBar progressBar = new ProgressBar(.1);
         progressBar.setStyle("-fx-accent: brown;");
-        progressBar.setPrefHeight(60);
-        progressBar.setPrefWidth(850);
-        progressBar.setLayoutX(120-xs);
-        progressBar.setLayoutY(420);
+        progressBar.setPrefHeight(60+hs);
+        progressBar.setPrefWidth(850+ws);
+        progressBar.setLayoutX(70+xcs);
+        progressBar.setLayoutY(420+ys);
 
-        Text text = new Text(375,300,"00.00");
+
+        Text text = new Text(375+xcs,300+ys,"00.00");
         text.setFill(Color.WHITE);
-        text.setFont(new Font(100));
+        text.setFont(new Font(100+fs));
 
 
 
-        Circle tempButtOn = new Circle(60,60,30,Color.BLUE);
-        tempButtOn.setOnMouseClicked(event -> turnON());
 
-        Circle tempButtOff = new Circle(150,60,30,Color.RED);
-        tempButtOff.setOnMouseClicked(event -> turnOF());
 
-        Circle tempButtGasType = new Circle(150,150,30,Color.YELLOW);
-        tempButtGasType.setOnMouseClicked(event -> setGasType());
+
+
         guiHelper.setRotate1(rotate1);
         guiHelper.setRotate2(rotate2);
         guiHelper.setProgressBar(progressBar);
@@ -172,9 +180,7 @@ public class PumpAndFlowGUI extends Application {
         valvePipe1.getTransforms().add(rotate1);
         valvePipe2.getTransforms().add(rotate2);
 
-        anchorPane.getChildren().add(tempButtOn);
-        anchorPane.getChildren().add(tempButtOff);
-        anchorPane.getChildren().add(tempButtGasType);
+
         anchorPane.getChildren().add(leftFirstPipe);
         anchorPane.getChildren().add(rightFirstPipe);
         anchorPane.getChildren().add(progressBar);
@@ -246,10 +252,9 @@ public class PumpAndFlowGUI extends Application {
             fuel.setY(yOffset + height - 4 - (height - 8));
             fuel.setArcWidth(arc);
             fuel.setArcHeight(arc);
-            fuel.setFill(new LinearGradient(
-                    0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
-                    new Stop(0, new Color(.81, .42, .04, 1)), new Stop(1, new Color(.158, .79, .08, 1)))
-            );
+
+            setTankColor(1);
+
             Rectangle emptyPart = new Rectangle(width - 8, height - 8);
             emptyPart.setX(4);
             emptyPart.setY(yOffset + 4);
@@ -285,6 +290,39 @@ public class PumpAndFlowGUI extends Application {
             nozzle.setStroke(Color.valueOf("CDCB1AFF"));
             tankPane.getChildren().addAll(hose, tankBody, fuel, cap, nozzle);
         }
+
+        public void setTankColor(int x){
+            Color color1;
+            Color color2;
+            switch (x) {
+                // orange and blue, black and purple, pink and white, pink and green
+                case 1 -> {
+                    color1 = Color.rgb(159, 69, 255);
+                    color2= Color.rgb(67, 23, 87);
+                }
+                case 2 -> {
+                    color1 = Color.rgb(200, 96, 33);
+                    color2= Color.rgb(36, 96, 192);
+                }
+                case 3 -> {
+                    color1 = Color.rgb(221, 80, 80);
+                    color2= Color.rgb(204, 177, 192);
+                }
+                case 4 -> {
+                    color1 = Color.rgb(221, 80, 80);
+                    color2= Color.rgb(139, 255, 50);
+                }
+                default -> {
+                    color1= Color.rgb(0, 0, 0);
+                    color2= Color.rgb(67, 23, 87);
+                }
+            };
+            fuel.setFill(new LinearGradient(
+                    0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
+                    new Stop(0, color1), new Stop(1, color2))
+            );
+        }
+
 
         public DoubleProperty fuelLevelProperty() {
             return fuelLevel;
