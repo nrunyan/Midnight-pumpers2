@@ -13,7 +13,9 @@ import java.util.List;
 /**
  * The customer API provides the functionality for retrieving information from the screen.
  */
-public class Customer { //TODO: this should not be a thread (for testing purposes)
+public class Customer extends Thread{ //TODO: this should not be a thread (for testing purposes)
+    // int for tracking screen
+    private int screenNum = -1;
     // the current gas prices
     private List<Double> inUseGas = null;
     //For splitting input from button presses
@@ -28,7 +30,7 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      */
     public Customer(){
         screenClient =new IOPort(PortAddresses.SCREEN_PORT);
-//        this.start();
+        this.start();
     }
 
     //TODO
@@ -36,30 +38,30 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      * Runs this operation.
      * This is completely for testing purposes at this moment
      */
-//    @Override
-//    public void run() {
-//        int indx = 1;
-////        setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
-////        setCharging(1, 3.00, 10.01, 30.03);
+    @Override
+    public void run() {
+        int indx = 1;
+//        setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
+//        setCharging(1, 3.00, 10.01, 30.03);
 //        setStartPumping(1, 3.00);
-////        setFueling(1, 3.00, 10.01, 30.03);
-//        while(true){
-//            // Sleeping for test purposes
-//            try {
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
+        setFueling(1, 3.00, 10.01, 30.03);
+        while(true){
+            // Sleeping for test purposes
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+//            test(indx);
+            ScreenStatus screenStatus = getStatus();
+            System.out.println("screen Status: " + screenStatus);
+//            if (indx > 7) {
+//                indx = 1;
+//            } else {
+//                indx ++;
 //            }
-////            test(indx);
-//            int gasC = getGasChoice();
-//            System.out.println("gas choice: " + gasC);
-////            if (indx > 7) {
-////                indx = 1;
-////            } else {
-////                indx ++;
-////            }
-//        }
-//    }
+        }
+    }
 
     /**
      * A private method to demonstarte screen setting
@@ -84,7 +86,67 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      *         return null when
      */
     public ScreenStatus getStatus(){
-        return null;
+        String btnCode = screenClient.get();
+        System.out.println("screenNum: " + screenNum);
+
+        if (btnCode != null) {
+            switch (screenNum) {
+                case 1 -> {
+                    // Pump unavailable screen
+
+                }
+                case 2 -> {
+                    // Welcome screen
+
+                }
+                case 3 -> {
+                    // Waiting Authorization screen
+
+                }
+                case 4 -> {
+                    // Card Declined Screen
+
+                }
+                case 5 -> {
+                    // Select Grade Screen
+
+                }
+                case 6 -> {
+                    // Start Pumping Screen (Start, Cancel Transaction)
+                    if (btnCode.charAt(0) == '8') {
+                        // Start fueling button pressed
+                        return ScreenStatus.START;
+                    } else if (btnCode.charAt(0) == '9') {
+                        // Cancel Transaction
+                        return ScreenStatus.CANCEL;
+                    }
+                }
+                case 7 -> {
+                    // Charging Screen (Resume or End Transaction)
+                    if (btnCode.charAt(0) == '8') {
+                        // Resume fueling btn pressed
+                        return ScreenStatus.RESUME;
+                    } else if (btnCode.charAt(0) == '9') {
+                        // End Transaction btn pressed
+                        return ScreenStatus.END;
+                    }
+                }
+                case 8 -> {
+                    // Fueling Screen (Pause or End Transaction)
+                    if (btnCode.charAt(0) == '8') {
+                        // Pause fueling btn pressed
+                        return ScreenStatus.PAUSE;
+                    } else if (btnCode.charAt(0) == '9') {
+                        // End Transaction btn pressed
+                        return ScreenStatus.END;
+                    }
+                }
+                default -> {
+                    // Goodbye Screen
+                }
+            }
+        }
+        return ScreenStatus.NO_INPUT;
     }
 
     /**
@@ -136,6 +198,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      */
     public void setPumpUnavailable() {
         screenClient.send(getPumpUnavailableString());
+
+        // Track screen number
+        screenNum = 1;
     }
 
     /**
@@ -144,6 +209,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      */
     public void setWelcome(){
         screenClient.send(getWelcomeString());
+
+        // Track screen number
+        screenNum = 2;
     }
     /**
      * Notify customer that their card is waiting authorization from the bank
@@ -151,6 +219,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      */
     public  void setWaitingAuthorization(){
         screenClient.send(getWaitingAuthorizationString());
+
+        // Track screen number
+        screenNum = 3;
     }
 
     /**
@@ -159,6 +230,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      */
     public void setCardDeclined(){
         screenClient.send(getCardDeclinedString());
+
+        // Track screen number
+        screenNum = 4;
     }
 
     /**
@@ -175,6 +249,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
 
         //Notify through IO Port
         screenClient.send(getGradeSelectionString(pListArray));
+
+        // Track screen number
+        screenNum = 5;
     }
 
     /**
@@ -184,6 +261,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      */
     public void setStartPumping(int gasSelection, double selectionPrice) {
         screenClient.send(getStartPumpingString(selectionPrice));
+
+        // Track screen number
+        screenNum = 6;
     }
 
     /**
@@ -198,6 +278,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
     public void setCharging(int gasSelection, double selectionPrice, double volumePumped, double totalCost) {
         //TODO: currently ignoring gas selection, does this matter?
         screenClient.send(getChargingString(selectionPrice, volumePumped, totalCost));
+
+        // Track screen number
+        screenNum = 7;
     }
 
     /**
@@ -212,6 +295,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
     public void setFueling(int gasSelection, double selectionPrice, double volumePumped, double totalCost) {
         //TODO: currently ignoring gas selection, does this matter?
         screenClient.send(getFuelingString(selectionPrice, volumePumped, totalCost));
+
+        // Track screen number
+        screenNum = 8;
     }
 
     /**
@@ -220,6 +306,9 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
      */
     public void setGoodBye() {
         screenClient.send(getGoodbyeString());
+
+        // Track screen number
+        screenNum = 9;
     }
 
     /**
@@ -369,8 +458,8 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
         MarkdownLanguage.TextFieldCommands.TextField stopTxt = new MarkdownLanguage.TextFieldCommands.TextField("Start Fueling", 8, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
         MarkdownLanguage.ButtonCommands.Button stopBtn = new MarkdownLanguage.ButtonCommands.Button(8, false, true);
 
-        // End Transaction button, and its text field
-        MarkdownLanguage.TextFieldCommands.TextField endTxt = new MarkdownLanguage.TextFieldCommands.TextField("End Transaction", 9, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        // Cancel Transaction button, and its text field
+        MarkdownLanguage.TextFieldCommands.TextField endTxt = new MarkdownLanguage.TextFieldCommands.TextField("Cancel Transaction", 9, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
         MarkdownLanguage.ButtonCommands.Button endBtn = new MarkdownLanguage.ButtonCommands.Button(9, false, true);
 
         // Gas selection price text
@@ -454,7 +543,7 @@ public class Customer { //TODO: this should not be a thread (for testing purpose
         MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
 
         // Stop button, and its text field
-        MarkdownLanguage.TextFieldCommands.TextField stopTxt = new MarkdownLanguage.TextFieldCommands.TextField("STOP", 8, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.TextFieldCommands.TextField stopTxt = new MarkdownLanguage.TextFieldCommands.TextField("PAUSE", 8, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
         MarkdownLanguage.ButtonCommands.Button stopBtn = new MarkdownLanguage.ButtonCommands.Button(8, false, true);
 
         // End Transaction button, and its text field
