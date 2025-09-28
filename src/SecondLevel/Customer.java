@@ -5,19 +5,66 @@ import Util.MarkdownConstants;
 import Util.MarkdownLanguage;
 import Util.PortAddresses;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * The customer API provides the functionality for retrieving information from the screen.
  */
-public class Customer {
+public class Customer extends Thread{ //TODO: this should not be a thread (for testing purposes)
+    // split messages by the ':' character
+    private final String REGEX = ":";
+
+    //The IO Port from Customer to Screen
     private IOPort screenClient;
+
     /**
      * Creates client IOPort to talk to the Screen. Customer receives button
      * presses from Screen, and sets the screen based on input from Main.
      */
     public Customer(){
         screenClient =new IOPort(PortAddresses.SCREEN_PORT);
+        this.start();
+    }
+
+    //TODO
+    /**
+     * Runs this operation.
+     * This is completely for testing purposes at this moment
+     */
+    @Override
+    public void run() {
+        int indx = 1;
+        setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
+//        setCharging(1, 3.00, 10.01, 30.03);
+//        setFueling(1, 3.00, 10.01, 30.03);
+        while(true){
+            // Sleeping for test purposes
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            int gasC = getGasChoice();
+        }
+    }
+
+    /**
+     * A private method to demonstarte screen setting
+     * @param screenNum the screen number
+     */
+    private void test(int screenNum) {
+        switch (screenNum) {
+            case 1 -> setPumpUnavailable();
+            case 2 -> setWelcome();
+            case 3 -> setWaitingAuthorization();
+            case 4 -> setCardDeclined();
+            case 5 -> setSelectGrade(new ArrayList<Double>(Arrays.asList(2.49, 2.69, 3.01, 3.29, 3.33, 3.50)));
+            case 6 -> setCharging(1, 3.00, 10.01, 30.03);
+            case 7 -> setFueling(1, 3.00, 10.01, 30.03);
+            case 8 -> setGoodBye();
+        }
     }
 
     /**
@@ -30,9 +77,22 @@ public class Customer {
 
     /**
      * Returns which gas type the customer selected, null(for no gas selected),low,mid,high.
-     * @return
+     * @return the gas choice
+     *         returns -2, for no gas selected
+     *         returns -1, when the customer cancels
+     *         returns 1 through 5 for gas type
      */
     public int getGasChoice(){
+        String btnCode = screenClient.get();
+        System.out.println("screenClient.get() = " + btnCode);
+        if (btnCode == null) {
+            return -2;
+        } else{
+            String[] btns = btnCode.split(REGEX);
+//            if (btns.length)
+            //TODO: confirm selection, without gas grade, reset gas screen
+            //TODO: return gas selection via button codes
+        }
         return 0;
     }
 
@@ -263,6 +323,10 @@ public class Customer {
         MarkdownLanguage.TextFieldCommands.TextField stopTxt = new MarkdownLanguage.TextFieldCommands.TextField("Resume Fueling", 8, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
         MarkdownLanguage.ButtonCommands.Button stopBtn = new MarkdownLanguage.ButtonCommands.Button(8, false, true);
 
+        // End Transaction button, and its text field
+        MarkdownLanguage.TextFieldCommands.TextField endTxt = new MarkdownLanguage.TextFieldCommands.TextField("End Transaction", 9, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.ButtonCommands.Button endBtn = new MarkdownLanguage.ButtonCommands.Button(9, false, true);
+
         // Gas selection price text
         MarkdownLanguage.TextFieldCommands.TextField perG = new MarkdownLanguage.TextFieldCommands.TextField("$" + selectP + " per gallon", 11, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Normal, MarkdownConstants.BGColor.White);
 
@@ -277,7 +341,9 @@ public class Customer {
         tfc.addFieldCommand(stopTxt);
         tfc.addFieldCommand(vTxt);
         tfc.addFieldCommand(costTxt);
+        tfc.addFieldCommand(endTxt);
         bc.addButtonCommand(stopBtn);
+        bc.addButtonCommand(endBtn);
 
         // return String representation of the commands
         MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);
@@ -301,6 +367,10 @@ public class Customer {
         MarkdownLanguage.TextFieldCommands.TextField stopTxt = new MarkdownLanguage.TextFieldCommands.TextField("STOP", 8, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
         MarkdownLanguage.ButtonCommands.Button stopBtn = new MarkdownLanguage.ButtonCommands.Button(8, false, true);
 
+        // End Transaction button, and its text field
+        MarkdownLanguage.TextFieldCommands.TextField endTxt = new MarkdownLanguage.TextFieldCommands.TextField("End Transaction", 9, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.ButtonCommands.Button endBtn = new MarkdownLanguage.ButtonCommands.Button(9, false, true);
+
         // Gas selection price text
         MarkdownLanguage.TextFieldCommands.TextField perG = new MarkdownLanguage.TextFieldCommands.TextField("$" + selectP + " per gallon", 11, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Normal, MarkdownConstants.BGColor.White);
 
@@ -315,7 +385,9 @@ public class Customer {
         tfc.addFieldCommand(stopTxt);
         tfc.addFieldCommand(vTxt);
         tfc.addFieldCommand(costTxt);
+        tfc.addFieldCommand(endTxt);
         bc.addButtonCommand(stopBtn);
+        bc.addButtonCommand(endBtn);
 
         // return String representation of the commands
         MarkdownLanguage.Commands cmds = new MarkdownLanguage.Commands(bc, tfc);

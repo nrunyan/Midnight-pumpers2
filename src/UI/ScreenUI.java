@@ -2,6 +2,7 @@ package UI;
 
 
 import FXDrivers.Screen;
+import SecondLevel.Customer;
 import Util.MarkdownConstants;
 import Util.MarkdownLanguage;
 import javafx.application.Application;
@@ -371,10 +372,16 @@ public class ScreenUI extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //Screen scr = new Screen();
+        // this screen is a new screen, which has a reference to this UI
         screen=new Screen(this);
+
+        // start the screen's io port
         screen.startServer();
 
+        // TODO: Delete this, for testing purposes
+//        Customer c = new Customer();
+
+        //JavaFx
         primaryStage.setTitle("Touch Screen Display");
         primaryStage.setScene(new Scene(this.getScene(), DISP_W, DISP_H));
         primaryStage.getScene().getStylesheets().add(
