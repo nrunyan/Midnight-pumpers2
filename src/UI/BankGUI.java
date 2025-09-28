@@ -123,12 +123,13 @@ public class BankGUI extends Application {
         Bonk bank = new Bonk();
         bank.setBankGUI(this);
 
-        bank.ApproveOrDeny("123443");
-        bank.ApproveOrDeny("24342");
-        bank.ApproveOrDeny("23412");
-        bank.ApproveOrDeny("13424");
-        bank.ApproveOrDeny("4123153");
-        bank.ApproveOrDeny("$233");
+//        bank.ApproveOrDeny("123443");
+//        bank.ApproveOrDeny("24342");
+//        bank.ApproveOrDeny("23412");
+//        bank.ApproveOrDeny("13424");
+//        bank.ApproveOrDeny("4123153");
+//        bank.ApproveOrDeny("$233");
+
         //JavaFx
         primaryStage.setTitle("Touch Screen Display");
         primaryStage.setScene(new Scene(this.getScene(), DISP_W, DISP_H));
