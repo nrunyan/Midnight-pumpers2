@@ -256,10 +256,9 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
 
     /**
      * Notify the customer that they can start pumping
-     * @param gasSelection the gas selected
      * @param selectionPrice the gas selection price
      */
-    public void setStartPumping(int gasSelection, double selectionPrice) {
+    public void setStartPumping(double selectionPrice) {
         screenClient.send(getStartPumpingString(selectionPrice));
 
         // Track screen number
@@ -270,12 +269,11 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
      * Notify the customer of the transaction status (giving them the option to
      * resume fueling)
      * Via IO Port
-     * @param gasSelection the gas selected by the user
      * @param selectionPrice the price selected by the user
      * @param volumePumped the volume pumped at this moment
      * @param totalCost the amount of income the bank will make at this moment
      */
-    public void setCharging(int gasSelection, double selectionPrice, double volumePumped, double totalCost) {
+    public void setCharging(double selectionPrice, double volumePumped, double totalCost) {
         //TODO: currently ignoring gas selection, does this matter?
         screenClient.send(getChargingString(selectionPrice, volumePumped, totalCost));
 
@@ -287,12 +285,11 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
      * Notify the customer of the transaction status (giving them the option to
      * stop actively fueling)
      * Via the IO Port
-     * @param gasSelection the gas selected by the user
      * @param selectionPrice the price selected by the user
      * @param volumePumped the volume pumped at this moment
      * @param totalCost the amount of income the bank will make at this moment
      */
-    public void setFueling(int gasSelection, double selectionPrice, double volumePumped, double totalCost) {
+    public void setFueling(double selectionPrice, double volumePumped, double totalCost) {
         //TODO: currently ignoring gas selection, does this matter?
         screenClient.send(getFuelingString(selectionPrice, volumePumped, totalCost));
 

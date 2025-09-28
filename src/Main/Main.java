@@ -7,7 +7,7 @@ import SecondLevel.PaymentControl;
 import SecondLevel.PumpAssembly;
 
 /**
- * Just a basic test main, run me last after starting the guis
+ * Authors: The Midnight Pumpers
  */
 
 public class Main {
