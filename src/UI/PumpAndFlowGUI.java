@@ -33,13 +33,15 @@ public class PumpAndFlowGUI extends Application {
     private Pump pump;
     private Gas gas;
     private FuelTank fuelTank;
+    private Stage stage;
 
     private Timeline timeline;
     //this is how long it takes to fill, the rate can be changed, this is just the
     // default
     final double durration =20;
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+
+    public Stage getStage() {
+        Stage primaryStage=new Stage();
         fuelTank = new FuelTank(120, 150, 100, 50,0);
         fuelTank.getTankPane().setBackground(Background.fill(Color.BLACK));
         //fuelTank.getTankPane().setLayoutX(1000);
@@ -83,11 +85,19 @@ public class PumpAndFlowGUI extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("PumpFlow");
-        primaryStage.show();
         anchorPane.prefWidthProperty().bind(scene.widthProperty());
         anchorPane.prefHeightProperty().bind(scene.heightProperty());
         Thread thread2 = new Thread(guiHelper);
         thread2.start();
+        stage=primaryStage;
+        new HoseConGUI(flowmeter).getStage().show();
+        return primaryStage;
+
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        getStage().show();
     }
     private void makeAnchor(){
         double xs = -50;

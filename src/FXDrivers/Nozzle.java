@@ -1,6 +1,7 @@
 package FXDrivers;
 
 import IOPort.IOServer;
+import Util.CommunicationString;
 import Util.PortAddresses;
 
 /**
@@ -25,6 +26,9 @@ public class Nozzle {
      */
     public void sendConnectionInfo(String connectedInfo){
         server.send(connectedInfo);
+    }
+    public void sendTankFull(){
+        server.send(CommunicationString.TURN_OFF);
     }
 
 }

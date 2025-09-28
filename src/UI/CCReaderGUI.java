@@ -38,7 +38,12 @@ public class CCReaderGUI extends Application {
      */
     @Override
     public void start(Stage stage) {
+        getStage().show();
 
+
+    }
+    public Stage getStage(){
+        Stage stage=new Stage();
         root.setPrefSize(width, height);
         Rectangle noImNotExplaingThis=new Rectangle(width,height);
         noImNotExplaingThis.setFill(Color.TRANSPARENT);
@@ -54,7 +59,7 @@ public class CCReaderGUI extends Application {
         creditCardView.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
             mouseOffsetX = e.getSceneX() - creditCardView.getX();
             mouseOffsetY = e.getSceneY() - creditCardView.getY();
-           creditCardView.setCursor(javafx.scene.Cursor.MOVE); // WHAT SO YOURE TELLING ME
+            creditCardView.setCursor(javafx.scene.Cursor.MOVE); // WHAT SO YOURE TELLING ME
         });
 
         creditCardView.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
@@ -94,7 +99,7 @@ public class CCReaderGUI extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Credit card reader");
-        stage.show();
+        return stage;
     }
 
     /**

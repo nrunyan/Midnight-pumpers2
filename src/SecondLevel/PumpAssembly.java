@@ -2,6 +2,7 @@ package SecondLevel;
 
 import IOPort.IOPort;
 import Util.CommunicationString;
+import Util.GasConstants;
 import Util.GasTypeEnum;
 import Util.PortAddresses;
 
@@ -69,6 +70,13 @@ public class PumpAssembly extends Thread {
     }
 
     /**
+     * Returns true if the tank is full
+     */
+    public boolean isTankFull(){
+        return tankFull;
+    }
+
+    /**
      * Gets the total volume of gas pumped
      * @return gas volume
      */
@@ -107,6 +115,7 @@ public class PumpAssembly extends Thread {
 
     public void pumpOff(){
         pumpClient.send(CommunicationString.TURN_OFF);
+        System.out.println("TURN PUMP OFFFFFF");
         gasOn=false;
 
     }
@@ -131,14 +140,7 @@ public class PumpAssembly extends Thread {
      * turn off
      */
     private void handleflowMeterMessage(String flowMeter){
-        if(flowMeter.equals(CommunicationString.TURN_OFF)){
-            pumpClient.send(CommunicationString.TURN_OFF);
-            gasOn=false;
-        }else{
-            volumePumped=Double.parseDouble(flowMeter);
-        }
-
-
+        volumePumped=Double.parseDouble(flowMeter);
     }
 
     /**
@@ -152,8 +154,11 @@ public class PumpAssembly extends Thread {
         if(hoseMessage.equals(CommunicationString.CONNECTED)){
             System.out.println("connected");
             connected=true;
-        }else{
+        }else if(hoseMessage.equals(CommunicationString.NOT_CONNECTED)){
             connected=false;
+            pumpOff();
+        }else {
+            tankFull=true;
             pumpOff();
         }
     }

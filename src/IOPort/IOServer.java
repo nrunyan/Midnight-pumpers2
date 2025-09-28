@@ -34,6 +34,7 @@ public class IOServer {
         this.portNumber = portNumber;
         try {
             serverSocket = new ServerSocket(portNumber);
+            System.out.println("Connected");
             //clientSocket = serverSocket.accept();
             //in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             //out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -48,6 +49,7 @@ public class IOServer {
                 try {
                     clientSocket = serverSocket.accept();
                     System.out.println("Connecting on "+portNumber);
+
                     in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
                     CONNECTED = true;

@@ -1,7 +1,9 @@
 package UI;
 
+import FXDrivers.Flowmeter;
 import FXDrivers.Nozzle;
 import Util.CommunicationString;
+import Util.GasConstants;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -26,28 +28,15 @@ public class HoseConGUI extends Application {
     private boolean flip=false;
     private boolean connected=false;
     private int getTo=4;
-    public HoseConGUI(){
+    private int step=1;
+    private Flowmeter flowmeter;
+    public HoseConGUI(Flowmeter flowmeter){
         nozzle=new Nozzle();
-        System.out.println("Here");
+        this.flowmeter=flowmeter;
     }
 
-    /**
-     * The main entry point for all JavaFX applications.
-     * The start method is called after the init method has returned,
-     * and after the system is ready for the application to begin running.
-     *
-     * <p>
-     * NOTE: This method is called on the JavaFX Application Thread.
-     * </p>
-     *
-     * @param stage the primary stage for this application, onto which
-     *                     the application scene can be set.
-     *                     Applications may create other stages, if needed, but they will not be
-     *                     primary stages.
-     * @throws Exception if something goes wrong
-     */
-    @Override
-    public void start(Stage stage) throws Exception {
+    public Stage getStage(){
+        Stage stage=new Stage();
         System.out.println("Getting to start");
         Rectangle hose = new Rectangle(550,500,50,50);
         hose.setFill(Color.PURPLE);
@@ -56,29 +45,43 @@ public class HoseConGUI extends Application {
 
 
         List<Image> images = new ArrayList<>();
-        images.add(new Image(getClass().getResource("/hoseCon1.png").toExternalForm()));
-        System.out.println(images.get(0).getHeight());
-        images.add(new Image(getClass().getResource("/hoseCon2.png").toExternalForm()));
-        images.add(new Image(getClass().getResource("/hoseCon3.png").toExternalForm()));
-        images.add(new Image(getClass().getResource("/hoseCon4.png").toExternalForm()));
-        images.add(new Image(getClass().getResource("/hoseCon5.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon1.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon2.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon3.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon4.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon5.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon6.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon7.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon8.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon9.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon10.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon11.png").toExternalForm()));
+        images.add(new Image(getClass().getResource("/hosecon12.png").toExternalForm()));
+
 
 
 
         ImageView imageView = new ImageView(images.get(currentIndex));
-        imageView.setFitWidth(700);
-        imageView.setFitHeight(200);
-        //imageView.setPreserveRatio(true);
+        imageView.setFitWidth(400);
+        //imageView.setFitHeight(200);
+        imageView.setPreserveRatio(true);
+
 
         AnimationTimer animationTimer =new AnimationTimer() {
+
             @Override
             public void handle(long now) {
+                if(flowmeter.getGasFlow()> GasConstants.MAX_FLOW){
+                    nozzle.sendTankFull();
+                    System.out.println("SENDING TANK FULL MESSAGE");
+                }
+
                 if(flip){
                     if(now%1000==0){
                         if(currentIndex==getTo){
                             flip=false;
                         }else{
-                            currentIndex = (currentIndex + 1) % images.size();
+                            currentIndex = (currentIndex + step);
                             imageView.setImage(images.get(currentIndex));
                         }
 
@@ -101,10 +104,18 @@ public class HoseConGUI extends Application {
             flip=true;
             flipConnection();
             if(currentIndex==0){
-                getTo=images.size()-1;
+                getTo=5;
+                step=1;
 
+            }else if(currentIndex==11){
+                getTo=5;
+                step=-1;
             }else{
-                getTo=0;
+                if(step==-1){
+                    getTo=0;
+                }else {
+                    getTo=11;
+                }
             }
         });
 
@@ -114,8 +125,34 @@ public class HoseConGUI extends Application {
         Scene scene = new Scene(root, 400, 300);
         stage.setScene(scene);
         stage.setTitle("Hose Connection GUI");
-        stage.show();
+        return stage;
 
+    }
+
+    /**
+     * The main entry point for all JavaFX applications.
+     * The start method is called after the init method has returned,
+     * and after the system is ready for the application to begin running.
+     *
+     * <p>
+     * NOTE: This method is called on the JavaFX Application Thread.
+     * </p>
+     *
+     * @param stage the primary stage for this application, onto which
+     *                     the application scene can be set.
+     *                     Applications may create other stages, if needed, but they will not be
+     *                     primary stages.
+     * @throws Exception if something goes wrong
+     */
+    @Override
+    public void start(Stage stage) throws Exception {
+
+        getStage().show();
+
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
 
@@ -131,6 +168,8 @@ public class HoseConGUI extends Application {
         }
         connected=!connected;
     }
+
+
 
 
 }

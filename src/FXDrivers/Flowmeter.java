@@ -56,7 +56,7 @@ public class Flowmeter extends Thread {
 
                 if (gas!=null&&gas.isOnOff()) {
                     if(gasFlow>GasConstants.MAX_FLOW){
-                        ioServer.send(CommunicationString.TURN_OFF);
+                        //ioServer.send(CommunicationString.TURN_OFF);
                     }else{
                         gasFlow += GasConstants.FLOW_RATE;
                         ioServer.send(String.valueOf(gasFlow));
