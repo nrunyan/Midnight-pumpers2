@@ -2,13 +2,28 @@ package Util;
 
 public enum ScreenStatus {
     // No input from the screen
-    NO_INPUT,
+    NO_INPUT("no input"),
     // The Customer canceled the transaction
-    CANCEL,
+    CANCEL("cancel"),
     // The Customer Paused fueling
-    PAUSE,
+    PAUSE("pause"),
     // The Customer Resumed fueling
-    RESUME,
+    RESUME("resume"),
     // Customer Starts fueling
-    START;
+    START("start"),
+    // Customer Has Ended the transaction
+    END("end");
+    private String string; // string representation of this Screen Status
+    ScreenStatus(String statusStr) {
+        string = statusStr;
+    }
+
+    /**
+     * Get the screen representation of this screen status
+     * @return the screen representation of this screen status
+     */
+    @Override
+    public String toString() {
+        return string;
+    }
 }
