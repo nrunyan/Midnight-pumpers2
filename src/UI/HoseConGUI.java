@@ -43,7 +43,6 @@ public class HoseConGUI extends Application {
         hose.setOnMouseClicked(event -> flipConnection());
         StackPane stackPane=new StackPane(hose);
 
-
         List<Image> images = new ArrayList<>();
         images.add(new Image(getClass().getResource("/hosecon1.png").toExternalForm()));
         images.add(new Image(getClass().getResource("/hosecon2.png").toExternalForm()));
@@ -142,7 +141,7 @@ public class HoseConGUI extends Application {
      *                     the application scene can be set.
      *                     Applications may create other stages, if needed, but they will not be
      *                     primary stages.
-     * @throws Exception if something goes wrong
+     * @throws Exception if something goes wrong <-- Thanks ~_~
      */
     @Override
     public void start(Stage stage) throws Exception {

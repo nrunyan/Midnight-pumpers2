@@ -284,6 +284,7 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
      * Via IO Port
      */
     public void setWelcome(){
+        System.out.println("Customer is sending: " + getWelcomeString());
         screenClient.send(getWelcomeString());
 
         // Track screen number

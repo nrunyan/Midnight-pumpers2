@@ -25,6 +25,7 @@ public class Main {
         Customer cust = new Customer();
         GasStation gasStationServer = new GasStation();
         PumpAssembly pump = new PumpAssembly();
-        PumpManager pm = new PumpManager(pc, cust,gasStationServer,pump);
+        PumpManager pm = new PumpManager(pc, cust, gasStation,pump);
+        pm.handleSystem();
     }
 }

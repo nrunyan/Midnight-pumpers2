@@ -90,6 +90,7 @@ public class PumpManager {
      * prompts screen to show welcome screen
      */
     private void welcomeScreen() {
+        System.out.println("Welcome Screen");
         customer.setWelcome();
         In_Use_Price_List = New_Price_List;
         do {
