@@ -1,6 +1,7 @@
 package UI;
 
 import FXDrivers.Bonk;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -120,6 +121,10 @@ public class BankGUI extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        getStage().show();
+    }
+    public Stage getStage(){
+        Stage primaryStage=new Stage();
         Bonk bank = new Bonk();
         bank.setBankGUI(this);
 
@@ -129,6 +134,14 @@ public class BankGUI extends Application {
 //        bank.ApproveOrDeny("13424");
 //        bank.ApproveOrDeny("4123153");
 //        bank.ApproveOrDeny("$233");
+        AnimationTimer animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                bank.ApproveOrDeny();
+
+            }
+        };
+        animationTimer.start();
 
         //JavaFx
         primaryStage.setTitle("Touch Screen Display");
@@ -136,6 +149,6 @@ public class BankGUI extends Application {
         primaryStage.getScene().getStylesheets().add(
                 getClass().getResource("style.css").toExternalForm()
         );
-        primaryStage.show();
+        return primaryStage;
     }
 }

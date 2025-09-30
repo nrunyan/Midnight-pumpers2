@@ -35,7 +35,7 @@ public class PumpAssembly extends Thread {
             String pumpMessage=pumpClient.get(); //should pump really say anything
             try{
                 if(flowMeterMessage!=null){
-                    System.out.println("flowMeter says: "+flowMeterMessage);
+                    System.out.println("FlowMeter says: "+flowMeterMessage);
                     handleflowMeterMessage(flowMeterMessage);
                 }
                 if(hoseMessage!=null){
@@ -103,7 +103,7 @@ public class PumpAssembly extends Thread {
             pumpClient.send(gasType.label);
             gasOn=true;
         }else {
-            System.out.println("HOSE NOT CONNECTED");
+            System.out.println("HOSE NOT CONNECTED, I'm not going to turn on");
         }
 
 
@@ -115,7 +115,6 @@ public class PumpAssembly extends Thread {
 
     public void pumpOff(){
         pumpClient.send(CommunicationString.TURN_OFF);
-        System.out.println("TURN PUMP OFFFFFF");
         gasOn=false;
 
     }
@@ -152,7 +151,6 @@ public class PumpAssembly extends Thread {
 
     private void handleHoseMessage(String hoseMessage){
         if(hoseMessage.equals(CommunicationString.CONNECTED)){
-            System.out.println("connected");
             connected=true;
         }else if(hoseMessage.equals(CommunicationString.NOT_CONNECTED)){
             connected=false;

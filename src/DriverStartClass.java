@@ -30,12 +30,13 @@ public class DriverStartClass extends Application  {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        //Starts all the GUIS
         new PumpAndFlowGUI().getStage().show();
         new GasStationGui().getStage().show();
         new CCReaderGUI().getStage().show();
         new ScreenUI().getStage().show();
+        new BankGUI().getStage().show();
 
-        new testerGUI().getStage().show();
+
     }
 }

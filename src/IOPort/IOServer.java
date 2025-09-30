@@ -34,7 +34,6 @@ public class IOServer {
         this.portNumber = portNumber;
         try {
             serverSocket = new ServerSocket(portNumber);
-            System.out.println("Connected");
             //clientSocket = serverSocket.accept();
             //in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             //out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -48,17 +47,14 @@ public class IOServer {
             while(true){
                 try {
                     clientSocket = serverSocket.accept();
-                    System.out.println("Connecting on "+portNumber);
-
                     in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
                     CONNECTED = true;
                     String msg; //THIS IS WHY WE NEED THREADS
                     //THIS WILL HANG ALL OUR STUFF IF WE DON'T HAVE THREADS
                     while ((msg = in.readLine()) != null) {
-                        System.out.println("Client says b4 "+msg);
                         message=msg;
-                        System.out.println("Client says "+message);
+
                     }
                 } catch (IOException e) {
                     System.out.println("Issue ");

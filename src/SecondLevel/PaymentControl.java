@@ -33,21 +33,16 @@ public class PaymentControl {
         try {
             String bonkMessage=bonkClient.get();
             String readerMessage=CCReaderClient.get();
-            if(bonkMessage==null){
-                System.out.println("Bank says: NULL");
-            }else{
+            if(bonkMessage!=null){
                 System.out.println("Bank says: "+bonkMessage);
                 handleBankMessage(bonkMessage);
             }
-            if (readerMessage==null){
-                System.out.println("Credit card reader says NULL");
-
-            }else{
+            if (readerMessage!=null){
+                System.out.println("Credit card reader says "+readerMessage);
                 handleReaderMessage(readerMessage);
 
             }
-            //THIS IS JUST LEFT IN FOR TESTING I PROMISE QUEENS
-            Thread.sleep(1000);
+            Thread.sleep(500);
 
         } catch (InterruptedException e) {
             System.out.println("Some issue in payment control ");

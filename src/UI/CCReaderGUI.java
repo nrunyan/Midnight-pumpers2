@@ -86,6 +86,7 @@ public class CCReaderGUI extends Application {
         creditCardView.addEventHandler(MouseEvent.MOUSE_RELEASED,e->{
             //so this is when they put it down, so its when we check if it's in frame
             //but i didn't feel like doing that so i didn't
+            System.out.println("sending cc info");
             ccReader.sendCCInfo();
             //then maybe wait
             //noImNotExplaingThis.setFill(handleResponce(CommunicationString.APPROVED));

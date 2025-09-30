@@ -4,6 +4,7 @@ import IOPort.IOPort;
 import Util.GasTypeEnum;
 import Util.PortAddresses;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,6 +47,13 @@ public class GasStation {
      * @return
      */
     public List<Double> getNewPrices(){
+//        ArrayList<Double> testerShit=new ArrayList<>();
+//        testerShit.add(1.0);
+//        testerShit.add(1.0);
+//        testerShit.add(1.0);
+//        testerShit.add(1.0);
+//        testerShit.add(1.0);
+//        return testerShit;
         return prices;
     }
 

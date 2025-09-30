@@ -66,8 +66,7 @@ public class Bonk {
             }
 
 
-        }else{
-            System.out.println("bonk gets null msg");
+
         }
 
     }
@@ -120,19 +119,19 @@ public class Bonk {
      * @param args
      */
 
-    public static void main(String args[]){
-        Bonk bonk=new Bonk();
-        while(true){
-            try {
-                bonk.ApproveOrDeny();
-                Thread.sleep(1000);
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
+//    public static void main(String args[]){
+//        Bonk bonk=new Bonk();
+//        while(true){
+//            try {
+//                bonk.ApproveOrDeny();
+//                Thread.sleep(1000);
+//
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+//    }
 
     /**
      * Set this Bank's Bank Gui

@@ -42,7 +42,7 @@ public class IOPort {
                 String msg;
                 while ((msg = in.readLine()) != null) {
                     message=msg;
-                    System.out.println("Server says: " + msg);  //Print statments for testing
+
                 }
             } catch (IOException e) {
                 System.out.println("Connection closed.");

@@ -9,6 +9,7 @@ import Util.GasTypeEnum;
 import Util.ScreenStatus;
 import Util.Timer;
 
+import java.sql.SQLOutput;
 import java.util.List;
 
 /**
@@ -38,6 +39,7 @@ public class PumpManager {
         this.gasStation = gasStation;
         this.pumpAssembly = pumpAssembly;
         ON = true;
+        handleSystem();
     }
 
     /**
@@ -60,7 +62,9 @@ public class PumpManager {
         customer.setPumpUnavailable();
         do {
             gasStation.handleMessage();
+            System.out.println("Taking out this print statement seems to make it stall");
         } while (!gasStation.checkPower());
+
         standBy();
     }
 
@@ -71,6 +75,7 @@ public class PumpManager {
     private void standBy() {
         pumpAssembly.reset();
         Gas_Grade_Selection = GasTypeEnum.NO_SELECTION;
+
         do {
             if (checkOff()) {
                 return;
@@ -99,6 +104,7 @@ public class PumpManager {
         }
         if (Credit_Card_Status == CreditCardEnum.Accepted) {
             selectFuel();
+
         } else {
             cardDeclined();
         }
@@ -140,6 +146,8 @@ public class PumpManager {
         customer.setSelectGrade(In_Use_Price_List);
         Timer timer = new Timer(120);
         do {
+            // Gas_Grade_Selection=GasTypeEnum.GAS_TYPE_1; WE NEED A RECHECK HERE
+
             if (timer.timeout()) {
                 standBy();
                 return;
@@ -156,6 +164,7 @@ public class PumpManager {
      * This is the idle stage, sets start pumping times out for two min
      */
     private void idle() {
+        System.out.println("here sir");
         seti();
         ScreenStatus screenStatus;
         customer.setStartPumping(In_Use_Price_List.get(gasIndex));
