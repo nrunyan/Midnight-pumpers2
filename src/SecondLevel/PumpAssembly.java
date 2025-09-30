@@ -99,6 +99,7 @@ public class PumpAssembly extends Thread {
      */
 
     public void pumpOn(GasTypeEnum gasType){
+        System.out.println("Telling pump to turn on");
         if(connected){
             pumpClient.send(gasType.label);
             gasOn=true;

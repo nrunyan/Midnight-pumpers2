@@ -1,9 +1,8 @@
-import FXDrivers.GasStationServer;
+package Main;
+
 import UI.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import javax.swing.*;
 
 import static javafx.application.Application.launch;
 

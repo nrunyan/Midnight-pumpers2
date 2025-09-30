@@ -90,7 +90,7 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
      */
     public ScreenStatus getStatus(){
         String btnCode = screenClient.get();
-        System.out.println("screenNum: " + screenNum);
+        //System.out.println("screenNum: " + screenNum);
 
         switch (screenNum) {
             case 1 -> {

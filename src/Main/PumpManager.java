@@ -146,7 +146,8 @@ public class PumpManager {
         customer.setSelectGrade(In_Use_Price_List);
         Timer timer = new Timer(120);
         do {
-            // Gas_Grade_Selection=GasTypeEnum.GAS_TYPE_1; WE NEED A RECHECK HERE
+            //Gas_Grade_Selection=GasTypeEnum.GAS_TYPE_1; //WE NEED A RECHECK HERE
+            Gas_Grade_Selection=GasTypeEnum.getEnum(customer.getGasChoice());
 
             if (timer.timeout()) {
                 standBy();
@@ -170,6 +171,7 @@ public class PumpManager {
         customer.setStartPumping(In_Use_Price_List.get(gasIndex));
         Timer timer = new Timer(120);
         do {
+
             if (timer.timeout()) {
                 standBy();
                 return;
@@ -178,11 +180,13 @@ public class PumpManager {
                 return;
             }
             screenStatus = customer.getStatus();
+            //System.out.println(customer.getStatus().toString());
             if (screenStatus == ScreenStatus.CANCEL) {
                 standBy();
                 return;
             }
-        } while (!(screenStatus == ScreenStatus.START && pumpAssembly.getHoseConnected()));
+            //TODO: hose should be connected b4 we send it to fuelling
+        } while ((screenStatus != ScreenStatus.START && !pumpAssembly.getHoseConnected()));
         fueling();
     }
 
@@ -190,6 +194,7 @@ public class PumpManager {
      *
      */
     private void fueling() {
+        System.out.println("Im here sir");
         pumpAssembly.pumpOn(Gas_Grade_Selection);
         ScreenStatus status;
         boolean pause;
@@ -199,6 +204,7 @@ public class PumpManager {
             if (checkOff()) {
                 return;
             }
+
             setUVD();
             customer.setFueling(unitPrice, gasVolume, totalPrice);
             status = customer.getStatus();
@@ -218,6 +224,7 @@ public class PumpManager {
      * active if pause button pressed
      * updates paused screen
      */
+    //TODO: i think there was a bug here with resume and the timer but i also dont remebrt what it was
     private void pause() {
         pumpAssembly.pumpOff();
         Timer timer = new Timer(120);
@@ -240,6 +247,7 @@ public class PumpManager {
     /**
      * goodbye displays a goodbye message, sends transaction info to the bank and gas station
      */
+    //TODO: I think there was a bug here but i dont remeber what it was
     private void goodBye() {
         customer.setGoodBye();
         Timer timer = new Timer(10);
