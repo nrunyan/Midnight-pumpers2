@@ -1,10 +1,7 @@
 package SecondLevel;
 
 import IOPort.IOPort;
-import Util.MarkdownConstants;
-import Util.MarkdownLanguage;
-import Util.PortAddresses;
-import Util.ScreenStatus;
+import Util.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -178,6 +175,54 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
     /**
      * Returns which gas type the customer selected, null(for no gas selected),low,mid,high.
      * @return the gas choice
+     *         returns NO_SELECTION, when calling this on the incorrect screen
+     *         returns NO_SELECTION, for no gas selected
+     *         returns CANCELED, when the customer cancels
+     *         returns GasTypeEnum 1 through 5 for gas type
+     */
+    public GasTypeEnum getGasChoiceEnum(){
+        if (screenNum != 5) {
+            System.out.println("Error: calling Customer.getGasChoice(), while not on gas selection screen");
+            return GasTypeEnum.NO_SELECTION;
+        }
+        String btnCode = screenClient.get();
+        if (btnCode == null) {
+            return GasTypeEnum.NO_SELECTION;
+        } else{
+            String[] btns = btnCode.split(REGEX);
+            if (btns.length == 1) {
+                // one button was pressed
+                if (btns[0].equals("9")) {
+                    // Confirm button pressed, alone, reset the screen
+                    setSelectGrade(inUseGas);
+                } else  {
+                    // Cancel button pressed
+                    return GasTypeEnum.CUSTOMER_CANCELED;
+                }
+            } else if (btns.length == 2){
+                // two buttons pressed
+                if (btns[0].equals("8")) {
+                    // Cancel button pressed
+                    return GasTypeEnum.CUSTOMER_CANCELED;
+                } else {
+                    // Gas was selected
+                    try {
+                        // Convert gas selection to Integer, return associated gas type
+                        int gasSelection = Integer.parseInt(btns[1]);
+                        return  GasTypeEnum.getEnum(gasSelection - 1);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Invalid number format: " + e.getMessage());
+                    }
+                }
+            }
+        }
+        // This only happens when the screen needs refreshed
+        return GasTypeEnum.NO_SELECTION;
+    }
+
+    /**
+     * Returns which gas type the customer selected, null(for no gas selected),low,mid,high.
+     * @return the gas choice
      *         retursn -3, when calling this on the incorrect screen
      *         returns -2, for no gas selected
      *         returns -1, when the customer cancels
@@ -305,7 +350,6 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
      * @param totalCost the amount of income the bank will make at this moment
      */
     public void setCharging(double selectionPrice, double volumePumped, double totalCost) {
-        //TODO: currently ignoring gas selection, does this matter?
         screenClient.send(getChargingString(selectionPrice, volumePumped, totalCost));
 
         // Track screen number
@@ -321,7 +365,6 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
      * @param totalCost the amount of income the bank will make at this moment
      */
     public void setFueling(double selectionPrice, double volumePumped, double totalCost) {
-        //TODO: currently ignoring gas selection, does this matter?
         screenClient.send(getFuelingString(selectionPrice, volumePumped, totalCost));
 
         // Track screen number
@@ -522,6 +565,10 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
      * @return the string representation of the charging screen
      */
     private String getChargingString(double selectP, double vPumped, double netCost) {
+        // Volume pumped String
+        String vPumpedString = String.format("%.2f", vPumped);
+        String netCostString = String.format("%.2f", netCost);
+
         // Button and text field commands
         MarkdownLanguage.ButtonCommands bc = new MarkdownLanguage.ButtonCommands();
         MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
@@ -538,10 +585,10 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
         MarkdownLanguage.TextFieldCommands.TextField perG = new MarkdownLanguage.TextFieldCommands.TextField("$" + selectP + " per gallon", 11, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Normal, MarkdownConstants.BGColor.White);
 
         // Volume Pumped
-        MarkdownLanguage.TextFieldCommands.TextField vTxt = new MarkdownLanguage.TextFieldCommands.TextField(vPumped + " gallons", 23, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.TextFieldCommands.TextField vTxt = new MarkdownLanguage.TextFieldCommands.TextField(vPumpedString + " gallons", 23, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
 
         // Net Cost
-        MarkdownLanguage.TextFieldCommands.TextField costTxt = new MarkdownLanguage.TextFieldCommands.TextField("$" + netCost, 45, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.TextFieldCommands.TextField costTxt = new MarkdownLanguage.TextFieldCommands.TextField("$" + netCostString, 45, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
 
         // Add Commands
         tfc.addFieldCommand(perG);
@@ -566,6 +613,10 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
      * @return the string representation of the fueling screen
      */
     private String getFuelingString(double selectP, double vPumped, double netCost) {
+        // Volume pumped String
+        String vPumpedString = String.format("%.2f", vPumped);
+        String netCostString = String.format("%.2f", netCost);
+
         // Button and text field commands
         MarkdownLanguage.ButtonCommands bc = new MarkdownLanguage.ButtonCommands();
         MarkdownLanguage.TextFieldCommands tfc= new MarkdownLanguage.TextFieldCommands();
@@ -582,10 +633,10 @@ public class Customer{ //TODO: this should not be a thread (for testing purposes
         MarkdownLanguage.TextFieldCommands.TextField perG = new MarkdownLanguage.TextFieldCommands.TextField("$" + selectP + " per gallon", 11, MarkdownConstants.Size.Medium, MarkdownConstants.Font.Normal, MarkdownConstants.BGColor.White);
 
         // Volume Pumped
-        MarkdownLanguage.TextFieldCommands.TextField vTxt = new MarkdownLanguage.TextFieldCommands.TextField(vPumped + " gallons", 23, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.TextFieldCommands.TextField vTxt = new MarkdownLanguage.TextFieldCommands.TextField(vPumpedString + " gallons", 23, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
 
         // Net Cost
-        MarkdownLanguage.TextFieldCommands.TextField costTxt = new MarkdownLanguage.TextFieldCommands.TextField("$" + netCost, 45, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
+        MarkdownLanguage.TextFieldCommands.TextField costTxt = new MarkdownLanguage.TextFieldCommands.TextField("$" + netCostString, 45, MarkdownConstants.Size.Large, MarkdownConstants.Font.Bold, MarkdownConstants.BGColor.White);
 
         // Add Commands
         tfc.addFieldCommand(perG);
