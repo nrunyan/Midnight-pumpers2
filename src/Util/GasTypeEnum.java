@@ -1,7 +1,8 @@
 package Util;
 
 public enum GasTypeEnum {
-    NO_SELECTION("NO SELECTION YET",-1),
+    NO_SELECTION("NO SELECTION YET",-2),
+    CUSTOMER_CANCELED("CUSTOMER CANCELLED", -1),
     GAS_TYPE_1(CommunicationString.GAS1_SELECTED,1),
     GAS_TYPE_2(CommunicationString.GAS2_SELECTED,2),
     GAS_TYPE_3(CommunicationString.GAS3_SELECTED,3),
@@ -33,6 +34,8 @@ public enum GasTypeEnum {
                 return GAS_TYPE_5;
             }
             default -> {
+                // This should never be called
+                System.out.println("Use new Customer.getGasChoiceEnum(), friendlier");
                 return NO_SELECTION;
             }
         }
