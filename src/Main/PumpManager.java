@@ -45,7 +45,7 @@ public class PumpManager {
      */
     public void handleSystem() {
         System.out.println("Handle system called");
-            off();
+        off();
     }
 
     /**
@@ -70,7 +70,10 @@ public class PumpManager {
         pumpAssembly.reset();
         Gas_Grade_Selection = GasTypeEnum.NO_SELECTION;
 
+
         do {
+            //Todo: card reader needs to read only one card at a time
+            paymentControl.resetCreditCardState();
             if (checkOff()) {
                 return;
             }
@@ -141,7 +144,7 @@ public class PumpManager {
         Timer timer = new Timer(120);
         do {
             //Gas_Grade_Selection=GasTypeEnum.GAS_TYPE_1; //WE NEED A RECHECK HERE
-            Gas_Grade_Selection=customer.getGasChoiceEnum();
+            Gas_Grade_Selection = customer.getGasChoiceEnum();
 
             if (timer.timeout()) {
                 standBy();
@@ -151,6 +154,9 @@ public class PumpManager {
                 return;
             }
         } while (Gas_Grade_Selection == GasTypeEnum.NO_SELECTION);
+        if (Gas_Grade_Selection == GasTypeEnum.CUSTOMER_CANCELED) {
+            standBy();
+        }
         idle();
     }
 
@@ -161,9 +167,10 @@ public class PumpManager {
     private void idle() {
         seti();
         ScreenStatus screenStatus;
-        customer.setStartPumping(In_Use_Price_List.get(gasIndex));
+//        customer.setStartPumping(In_Use_Price_List.get(gasIndex));
         Timer timer = new Timer(120);
         do {
+            customer.setStartPumping(In_Use_Price_List.get(gasIndex));
             if (timer.timeout()) {
                 standBy();
                 return;
@@ -172,7 +179,6 @@ public class PumpManager {
                 return;
             }
             screenStatus = customer.getStatus();
-            //System.out.println(customer.getStatus().toString());
             if (screenStatus == ScreenStatus.CANCEL) {
                 standBy();
                 return;
@@ -182,7 +188,8 @@ public class PumpManager {
     }
 
     /**
-     *
+     * This method handles the fueling checks if pump is connected when begin fueling and
+     * resets program on end transaction
      */
     private void fueling() {
         pumpAssembly.pumpOn(Gas_Grade_Selection);
@@ -190,7 +197,6 @@ public class PumpManager {
         boolean pause;
         boolean stop;
         boolean tankfull;
-        //Todo: Test issues with pause fueling -> disconnect hose -> resume fueling
         do {
             if (checkOff()) {
                 return;
@@ -218,21 +224,21 @@ public class PumpManager {
      * active if pause button pressed
      * updates paused screen
      */
-    //TODO: i think there was a bug here with resume and the timer but i also dont remebrt what it was
-    // The bug is that hitting resume when the pump is not plugged in it will go back to the paused page
-    // plugging in the hose and hitting resume works but we should make it better
     private void pause() {
         pumpAssembly.pumpOff();
         Timer timer = new Timer(120);
         setUVD();
-        customer.setCharging(unitPrice, gasVolume, totalPrice);
         ScreenStatus screenStatus = ScreenStatus.NO_INPUT;
         do {
+            customer.setCharging(unitPrice, gasVolume, totalPrice);
+
             if (timer.timeout() || screenStatus == ScreenStatus.END) {
                 goodBye();
                 return;
             }
-            if (checkOff()) {return;}
+            if (checkOff()) {
+                return;
+            }
             screenStatus = customer.getStatus();
         } while (!(pumpAssembly.getHoseConnected() && (screenStatus == ScreenStatus.RESUME)));
         if (screenStatus == ScreenStatus.RESUME) {
@@ -243,17 +249,17 @@ public class PumpManager {
     /**
      * goodbye displays a goodbye message, sends transaction info to the bank and gas station
      */
-    //TODO: I think there was a bug here but i dont remeber what it was
     private void goodBye() {
         System.out.println("Good Bye");
         customer.setGoodBye();
-        Timer timer = new Timer(10);
+        Timer timer = new Timer(5);
         setUVD();
         paymentControl.sendTransactionInfo(totalPrice);
         gasStation.sendTransactionInfo(totalPrice, gasVolume, Gas_Grade_Selection);
-        while(timer.timeout()) {
-            standBy();
+        while (!timer.timeout()) {
+
         }
+        standBy();
     }
 
 
@@ -304,7 +310,7 @@ public class PumpManager {
     /**
      * Sets the unit price
      */
-    private void setUVD(){
+    private void setUVD() {
         seti();
         unitPrice = In_Use_Price_List.get(gasIndex);
         gasVolume = pumpAssembly.getGasVolume();

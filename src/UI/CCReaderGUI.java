@@ -83,13 +83,11 @@ public class CCReaderGUI extends Application {
         };
         animationTimer.start();
 
+        //Todo: something is weird with sending multiple
         creditCardView.addEventHandler(MouseEvent.MOUSE_RELEASED,e->{
-            //so this is when they put it down, so its when we check if it's in frame
-            //but i didn't feel like doing that so i didn't
+
             System.out.println("sending cc info");
             ccReader.sendCCInfo();
-            //then maybe wait
-            //noImNotExplaingThis.setFill(handleResponce(CommunicationString.APPROVED));
             creditCardView.setCursor(Cursor.CLOSED_HAND);
 
         });
@@ -105,7 +103,7 @@ public class CCReaderGUI extends Application {
 
     /**
      * Guys guys please here me out, returning a color really is the best way
-     * of handling this guys please you don't understand, guys please
+     * of handling this guys please you don't understand, guys please <- no one read this but me and you -Youssef
      * @param bankResponce approved or denied based on bank
      */
     private Color handleResponce(String bankResponce){
@@ -119,10 +117,7 @@ public class CCReaderGUI extends Application {
         }else{
             color=new Color(1,0,0,.5);
         }
-
-
         return color;
-
     }
 
     public static void main(String[] args) {

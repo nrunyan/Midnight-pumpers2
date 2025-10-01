@@ -26,6 +26,13 @@ public class PaymentControl {
     }
 
     /**
+     * set the credit card state to not present
+     */
+    public void resetCreditCardState() {
+        this.creditCardState = CreditCardEnum.NotPresent;
+    }
+
+    /**
      * Runs this operation.
      */
 

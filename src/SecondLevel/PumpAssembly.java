@@ -35,11 +35,11 @@ public class PumpAssembly extends Thread {
             String pumpMessage=pumpClient.get(); //should pump really say anything
             try{
                 if(flowMeterMessage!=null){
-                    System.out.println("FlowMeter says: "+flowMeterMessage);
+//                    System.out.println("FlowMeter says: "+flowMeterMessage);
                     handleflowMeterMessage(flowMeterMessage);
                 }
                 if(hoseMessage!=null){
-                    System.out.println("Hose says: "+hoseMessage);
+//                    System.out.println("Hose says: "+hoseMessage);
                     handleHoseMessage(hoseMessage);
                 }
                 Thread.sleep(50);

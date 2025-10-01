@@ -45,7 +45,7 @@ public class BankGUI extends Application {
         resetBackground();
 
         // Display the money being transferred
-        Text accepted = new Text(TEXT_X,TEXT_Y,moneyTransferred  + " Transferred");
+        Text accepted = new Text(TEXT_X,TEXT_Y,moneyTransferred  + "\nTransferred");
         accepted.getStyleClass().add("bank-text"); //using css file
         accepted.setFill(Color.WHITE);
         anchorPane.getChildren().add(accepted);
@@ -128,12 +128,6 @@ public class BankGUI extends Application {
         Bonk bank = new Bonk();
         bank.setBankGUI(this);
 
-//        bank.ApproveOrDeny("123443");
-//        bank.ApproveOrDeny("24342");
-//        bank.ApproveOrDeny("23412");
-//        bank.ApproveOrDeny("13424");
-//        bank.ApproveOrDeny("4123153");
-//        bank.ApproveOrDeny("$233");
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
