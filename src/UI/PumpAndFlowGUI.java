@@ -103,33 +103,36 @@ public class PumpAndFlowGUI extends Application {
         double xs = -50;
         double ys = -120;
         double rs = 0;
-        double ws =-20;
+        double ws =-200;
         double hs =0;
         double fs = 0;
         double xcs = -50;
-        Rectangle leftFirstPipe = new Rectangle(50+xcs,400+ys,550+ws,100+hs);
+        double cOffset = -90;
+        Rectangle leftFirstPipe = new Rectangle(50+xcs,400+ys,900+ws,100+hs);
         leftFirstPipe.setStroke(Color.BLUE);
         leftFirstPipe.setFill(Color.LIGHTBLUE);
 
-        Rectangle leftScrewBlock = new Rectangle(300+xcs,375+ys,50,150+hs);
+        Rectangle leftScrewBlock = new Rectangle(300+xcs+cOffset,375+ys,50,150+hs);
         leftScrewBlock.setStroke(Color.BLUE);
         leftScrewBlock.setFill(Color.LIGHTBLUE);
 
-        Rectangle rightFirstPipe = new Rectangle(575+xcs,400+ys,375+ws,100+hs);
+        Rectangle rightFirstPipe = new Rectangle(575+xcs,400+ys,375+ws,
+                100+hs);
         rightFirstPipe.setStroke(Color.BLUE);
         rightFirstPipe.setFill(Color.LIGHTBLUE);
 
-        Rectangle rightScrewBlock = new Rectangle(650+xcs,375+ys,50,150+hs);
+        Rectangle rightScrewBlock = new Rectangle(650+xcs+cOffset,375+ys,50,
+                150+hs);
         rightScrewBlock.setStroke(Color.BLUE);
         rightScrewBlock.setFill(Color.LIGHTBLUE);
 
-        Circle outerCircle = new Circle(500+xcs, 450+ys, 100+rs); // centerX,
+        Circle outerCircle = new Circle(500+xcs+cOffset, 450+ys, 100+rs); // centerX,
         // centerY,
         // radius
         outerCircle.setFill(Color.BLUE);
 
         // Inner circle (the "hole")
-        Circle innerCircle = new Circle(500+xcs, 450+ys, 75+rs); // centerX,
+        Circle innerCircle = new Circle(500+xcs+cOffset, 450+ys, 75+rs); // centerX,
         // centerY,
         // radius
         innerCircle.setFill(Color.WHITE); // Or any color to represent the hole
@@ -140,26 +143,26 @@ public class PumpAndFlowGUI extends Application {
         donut.setStroke(Color.RED);
         donut.setFill(Color.LIGHTPINK);
 
-        Circle pivot = new Circle(500+xcs,450+ys,20+rs);
+        Circle pivot = new Circle(500+xcs+cOffset,450+ys,20+rs);
         pivot.setFill(Color.LIGHTPINK);
         pivot.setStroke(Color.RED);
 
-        Rectangle valvePipe1 = new Rectangle(425+xcs,437.5+ys,150,25+hs);
+        Rectangle valvePipe1 = new Rectangle(425+xcs+cOffset,437.5+ys,150,25+hs);
         valvePipe1.setFill(Color.LIGHTPINK);
         valvePipe1.setStroke(Color.RED);
 
-        Rectangle valvePipe2 = new Rectangle(425+xcs,437.5+ys,150,25+hs);
+        Rectangle valvePipe2 = new Rectangle(425+xcs+cOffset,437.5+ys,150,25+hs);
         valvePipe2.setFill(Color.LIGHTPINK);
         valvePipe2.setStroke(Color.RED);
 
         Rotate rotate1 = new Rotate();
         rotate1.setAngle(45);
-        rotate1.setPivotX(500+xcs);
+        rotate1.setPivotX(500+xcs+cOffset);
         rotate1.setPivotY(450+ys);
 
         Rotate rotate2 = new Rotate();
         rotate2.setAngle(135);
-        rotate2.setPivotX(500+xcs);
+        rotate2.setPivotX(500+xcs+cOffset);
         rotate2.setPivotY(450+ys);
 
         ProgressBar progressBar = new ProgressBar(.1);
@@ -170,7 +173,7 @@ public class PumpAndFlowGUI extends Application {
         progressBar.setLayoutY(420+ys);
 
 
-        Text text = new Text(375+xcs,300+ys,"00.00");
+        Text text = new Text(375+xcs+cOffset,300+ys,"00.00");
         text.setFill(Color.WHITE);
         text.setFont(new Font(100+fs));
 
@@ -192,7 +195,7 @@ public class PumpAndFlowGUI extends Application {
 
 
         anchorPane.getChildren().add(leftFirstPipe);
-        anchorPane.getChildren().add(rightFirstPipe);
+        //anchorPane.getChildren().add(rightFirstPipe);
         anchorPane.getChildren().add(progressBar);
         anchorPane.getChildren().add(leftScrewBlock);
         anchorPane.getChildren().add(rightScrewBlock);
