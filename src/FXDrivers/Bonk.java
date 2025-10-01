@@ -16,7 +16,7 @@ import java.util.Random;
  */
 public class Bonk {
     private IOServer server;
-    private Random random=new Random(19);
+    private Random random=new Random(2);
     private BankGUI bankGUI = null;
     private double moneyMade=0.0;
 
