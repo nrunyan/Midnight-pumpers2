@@ -55,6 +55,9 @@ public class GasStationGui extends Application {
 
         Thread thread = new Thread(gasSHelper);
         thread.start();
+
+        primaryStage.setX(950);
+        primaryStage.setY(0);
         return primaryStage;
     }
 

@@ -143,6 +143,8 @@ public class BankGUI extends Application {
         primaryStage.getScene().getStylesheets().add(
                 getClass().getResource("style.css").toExternalForm()
         );
+        primaryStage.setY(500);
+        primaryStage.setX(700);
         return primaryStage;
     }
 }

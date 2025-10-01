@@ -90,6 +90,8 @@ public class PumpAndFlowGUI extends Application {
         Thread thread2 = new Thread(guiHelper);
         thread2.start();
         stage=primaryStage;
+        primaryStage.setX(0);
+        primaryStage.setY(350);
         new HoseConGUI(flowmeter).getStage().show();
         return primaryStage;
 
@@ -341,6 +343,9 @@ public class PumpAndFlowGUI extends Application {
             return fuelLevel;
         }
 
+        public void setFuelLevel(double level){
+            fuelLevel.set(level);
+        }
         public Pane getTankPane() {
             return tankPane;
         }

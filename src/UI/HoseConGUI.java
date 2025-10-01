@@ -57,14 +57,10 @@ public class HoseConGUI extends Application {
         images.add(new Image(getClass().getResource("/hosecon11.png").toExternalForm()));
         images.add(new Image(getClass().getResource("/hosecon12.png").toExternalForm()));
 
-
-
-
         ImageView imageView = new ImageView(images.get(currentIndex));
         imageView.setFitWidth(400);
         //imageView.setFitHeight(200);
         imageView.setPreserveRatio(true);
-
 
         AnimationTimer animationTimer =new AnimationTimer() {
 
@@ -72,6 +68,7 @@ public class HoseConGUI extends Application {
             public void handle(long now) {
                 if(flowmeter.getGasFlow()> GasConstants.MAX_FLOW){
                     nozzle.sendTankFull();
+                    System.out.println("flowmeter amount "+ flowmeter.getGasFlow());
                     System.out.println("SENDING TANK FULL MESSAGE");
                 }
 
@@ -83,11 +80,7 @@ public class HoseConGUI extends Application {
                             currentIndex = (currentIndex + step);
                             imageView.setImage(images.get(currentIndex));
                         }
-
-
                     }
-
-
                 }
 
             }
@@ -124,6 +117,8 @@ public class HoseConGUI extends Application {
         Scene scene = new Scene(root, 400, 300);
         stage.setScene(scene);
         stage.setTitle("Hose Connection GUI");
+        stage.setX(0);
+        stage.setY(0);
         return stage;
 
     }
@@ -159,6 +154,7 @@ public class HoseConGUI extends Application {
      * Just reverses the connection, lets its driver handle any
      * socket communication
      */
+
     private void flipConnection(){
         if(connected){
             nozzle.sendConnectionInfo(CommunicationString.NOT_CONNECTED);
@@ -167,8 +163,4 @@ public class HoseConGUI extends Application {
         }
         connected=!connected;
     }
-
-
-
-
 }
