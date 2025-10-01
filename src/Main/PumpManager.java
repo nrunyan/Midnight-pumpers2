@@ -56,6 +56,7 @@ public class PumpManager {
         In_Use_Price_List = null;
         New_Price_List = null;
         customer.setPumpUnavailable();
+
         do {
             gasStation.handleMessage();
         } while (!gasStation.checkPower());
@@ -171,6 +172,7 @@ public class PumpManager {
         Timer timer = new Timer(120);
         do {
             customer.setStartPumping(In_Use_Price_List.get(gasIndex));
+            pumpAssembly.resetTank();
             if (timer.timeout()) {
                 standBy();
                 return;
@@ -260,6 +262,7 @@ public class PumpManager {
 
         }
         standBy();
+        System.out.println(pumpAssembly.isTankFull());
     }
 
 

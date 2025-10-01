@@ -116,6 +116,7 @@ public class PumpAssembly extends Thread {
 
     public void pumpOff(){
         pumpClient.send(CommunicationString.TURN_OFF);
+        System.out.println("Sent Pump off");
         gasOn=false;
 
     }
@@ -160,5 +161,10 @@ public class PumpAssembly extends Thread {
             tankFull=true;
             pumpOff();
         }
+    }
+    // Reset the tank to being empty
+    public void resetTank() {
+        tankFull = false;
+        volumePumped = 0.0;
     }
 }

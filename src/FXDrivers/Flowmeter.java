@@ -51,6 +51,7 @@ public class Flowmeter extends Thread {
         while (true) {
             if (ioServer.ON) {
                 if(ioServer.get() != null) {
+                    System.out.println("Reset Flow");
                     gasFlow = 0;
                 }
 

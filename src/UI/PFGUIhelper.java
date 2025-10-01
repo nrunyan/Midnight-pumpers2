@@ -75,7 +75,10 @@ public class PFGUIhelper implements Runnable{
     @Override
     public void run() {
         while (flowmeter.connected()) {
-
+            if (flowmeter.getGasFlow() == 0 ){
+                fuelTank.setFuelLevel(0);
+                updatedText();
+            }
             if (flowmeter.getGas().isOnOff()) {
                 fuelTank.setTankColor(pump.getGasType());
                 timeline.play();

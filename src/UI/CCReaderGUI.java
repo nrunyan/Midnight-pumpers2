@@ -105,6 +105,8 @@ public class CCReaderGUI extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Credit card reader");
+        stage.setX(900);
+        stage.setY(400);
         return stage;
     }
 

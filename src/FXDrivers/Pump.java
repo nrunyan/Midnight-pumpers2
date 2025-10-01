@@ -81,7 +81,7 @@ public class Pump extends Thread {
 
                 }
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
