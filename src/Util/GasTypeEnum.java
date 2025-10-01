@@ -35,7 +35,7 @@ public enum GasTypeEnum {
             }
             default -> {
                 // This should never be called
-                System.out.println("Use new Customer.getGasChoiceEnum(), friendlier");
+//                System.out.println("Use new Customer.getGasChoiceEnum(), friendlier");
                 return NO_SELECTION;
             }
         }

@@ -240,7 +240,6 @@ public class Screen extends Thread{
             screenUI.setBlank();
         }
         String btnS = btnString(pressedBtn);
-        System.out.println(btnS); //TODO delete this
         ioServer.send(btnS);
     }
     /**

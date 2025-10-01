@@ -22,7 +22,6 @@ public class PumpManager {
     private Customer customer;
     private GasStation gasStation;
     private PumpAssembly pumpAssembly;
-    private Boolean ON;
     private List<Double> New_Price_List;
     private List<Double> In_Use_Price_List;
     private GasTypeEnum Gas_Grade_Selection;
@@ -38,8 +37,6 @@ public class PumpManager {
         this.customer = customer;
         this.gasStation = gasStation;
         this.pumpAssembly = pumpAssembly;
-        ON = true;
-        handleSystem();
     }
 
     /**
@@ -47,9 +44,8 @@ public class PumpManager {
      * The flow of the program
      */
     public void handleSystem() {
-        while (ON) {
+        System.out.println("Handle system called");
             off();
-        }
     }
 
     /**
@@ -62,9 +58,7 @@ public class PumpManager {
         customer.setPumpUnavailable();
         do {
             gasStation.handleMessage();
-            System.out.println("Taking out this print statement seems to make it stall");
         } while (!gasStation.checkPower());
-
         standBy();
     }
 
@@ -90,7 +84,6 @@ public class PumpManager {
      * prompts screen to show welcome screen
      */
     private void welcomeScreen() {
-        System.out.println("Welcome Screen");
         customer.setWelcome();
         In_Use_Price_List = New_Price_List;
         do {
@@ -148,7 +141,7 @@ public class PumpManager {
         Timer timer = new Timer(120);
         do {
             //Gas_Grade_Selection=GasTypeEnum.GAS_TYPE_1; //WE NEED A RECHECK HERE
-            Gas_Grade_Selection=GasTypeEnum.getEnum(customer.getGasChoice());
+            Gas_Grade_Selection=customer.getGasChoiceEnum();
 
             if (timer.timeout()) {
                 standBy();
@@ -166,13 +159,11 @@ public class PumpManager {
      * This is the idle stage, sets start pumping times out for two min
      */
     private void idle() {
-        System.out.println("here sir");
         seti();
         ScreenStatus screenStatus;
         customer.setStartPumping(In_Use_Price_List.get(gasIndex));
         Timer timer = new Timer(120);
         do {
-
             if (timer.timeout()) {
                 standBy();
                 return;
@@ -186,7 +177,6 @@ public class PumpManager {
                 standBy();
                 return;
             }
-            //TODO: hose should be connected b4 we send it to fuelling
         } while ((screenStatus != ScreenStatus.START && !pumpAssembly.getHoseConnected()));
         fueling();
     }
@@ -195,12 +185,12 @@ public class PumpManager {
      *
      */
     private void fueling() {
-        System.out.println("Im here sir");
         pumpAssembly.pumpOn(Gas_Grade_Selection);
         ScreenStatus status;
         boolean pause;
         boolean stop;
         boolean tankfull;
+        //Todo: Test issues with pause fueling -> disconnect hose -> resume fueling
         do {
             if (checkOff()) {
                 return;
@@ -215,6 +205,9 @@ public class PumpManager {
         } while (!(pause || stop || tankfull));
         if (pause) {
             pause();
+        } else if (stop) {
+            pumpAssembly.pumpOff();
+            goodBye();
         } else {
             goodBye();
         }
@@ -226,6 +219,8 @@ public class PumpManager {
      * updates paused screen
      */
     //TODO: i think there was a bug here with resume and the timer but i also dont remebrt what it was
+    // The bug is that hitting resume when the pump is not plugged in it will go back to the paused page
+    // plugging in the hose and hitting resume works but we should make it better
     private void pause() {
         pumpAssembly.pumpOff();
         Timer timer = new Timer(120);
@@ -250,6 +245,7 @@ public class PumpManager {
      */
     //TODO: I think there was a bug here but i dont remeber what it was
     private void goodBye() {
+        System.out.println("Good Bye");
         customer.setGoodBye();
         Timer timer = new Timer(10);
         setUVD();

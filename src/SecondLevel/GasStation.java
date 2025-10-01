@@ -38,6 +38,8 @@ public class GasStation {
      */
 
     public  boolean checkPower(){
+        //? This print statement makes the program work. Don't ask me why.
+        System.out.println("Checking power");
         return onOff;
     }
 

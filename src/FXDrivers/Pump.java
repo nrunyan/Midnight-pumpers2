@@ -38,6 +38,7 @@ public class Pump extends Thread {
     /*
         //TODO needs to read it's status so that it can turn on the pump needs a
            proper message to be able to read
+           ------------is this fixed?----------------
          */
     @Override
     public void run() {

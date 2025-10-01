@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * The customer API provides the functionality for retrieving information from the screen.
  */
-public class Customer{ //TODO: this should not be a thread (for testing purposes)
+public class Customer{
     // int for tracking screen
     private int screenNum = -1;
     // the current gas prices
