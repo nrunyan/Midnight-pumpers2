@@ -126,7 +126,7 @@ public class PumpAssembly extends Thread {
      * Resets all variables, likely should just be called by main
      */
     public void reset(){
-        connected=false;
+//        connected=false;
         volumePumped=0.0;
         tankFull=false;
         flowmeterClient.send(CommunicationString.RESET_FLOW_METER);
