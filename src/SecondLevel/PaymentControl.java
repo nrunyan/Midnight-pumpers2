@@ -67,7 +67,8 @@ public class PaymentControl {
      *   If its passed through main, then this should take args no?
      */
     public void sendTransactionInfo(double dollarAmount){
-        bonkClient.send("$"+String.valueOf(dollarAmount));
+        String stringRep = String.format("%.2f", dollarAmount);
+        bonkClient.send("$"+stringRep);
 
     }
 
