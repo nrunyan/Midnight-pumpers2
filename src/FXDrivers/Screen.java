@@ -49,7 +49,7 @@ public class Screen extends Thread{
     public void run() {
         while (true){
             String message = ioServer.get();
-            System.out.println("Screen recieved message: " + message);
+//            System.out.println("Screen recieved message: " + message);
             if(message!=null){
                 System.out.println("message in Screen: " + message);
                 // Markdown Language Handling

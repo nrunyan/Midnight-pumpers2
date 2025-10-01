@@ -45,9 +45,7 @@ public class Bonk {
                 }
             }else{
                 // int ccNum=Integer.parseInt(msg); doesnt work lmao hdahahhqmsdsdjugigi
-//                if(random.nextInt()%2==0){
-                //Todo: change back to random
-                  if(true){
+                if(random.nextInt()%2==0){
                     if (bankGUI != null) {
                         // Update GUI if it exists
                         Platform.runLater(() -> {
