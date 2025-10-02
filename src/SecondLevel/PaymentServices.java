@@ -9,7 +9,7 @@ import Util.PortAddresses;
  * API class for BONK sever and CC reader
  * We can make this a runnable, please let me know what you think asap
  */
-public class PaymentControl {
+public class PaymentServices {
     private IOPort bonkClient;
     private IOPort CCReaderClient;
     private CreditCardEnum creditCardState=CreditCardEnum.NotPresent;
@@ -20,7 +20,7 @@ public class PaymentControl {
      * the ccreader and bank send messages back and forth but that shouldn't be known outside of this
      * class
      */
-    public PaymentControl(){
+    public PaymentServices(){
         bonkClient=new IOPort(PortAddresses.CARD_COMPANY_PORT);
         CCReaderClient=new IOPort(PortAddresses.CARD_READER_PORT);
     }

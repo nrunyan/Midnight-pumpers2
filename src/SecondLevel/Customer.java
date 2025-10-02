@@ -180,7 +180,7 @@ public class Customer{
      *         returns CANCELED, when the customer cancels
      *         returns GasTypeEnum 1 through 5 for gas type
      */
-    public GasTypeEnum getGasChoiceEnum(){
+    public GasTypeEnum getGasChoice(){
         if (screenNum != 5) {
             System.out.println("Error: calling Customer.getGasChoice(), while not on gas selection screen");
             return GasTypeEnum.NO_SELECTION;
@@ -218,54 +218,6 @@ public class Customer{
         }
         // This only happens when the screen needs refreshed
         return GasTypeEnum.NO_SELECTION;
-    }
-
-    /**
-     * Returns which gas type the customer selected, null(for no gas selected),low,mid,high.
-     * @return the gas choice
-     *         retursn -3, when calling this on the incorrect screen
-     *         returns -2, for no gas selected
-     *         returns -1, when the customer cancels
-     *         returns 1 through 5 for gas type
-     */
-    public int getGasChoice(){
-        if (screenNum != 5) {
-            System.out.println("Error: calling Customer.getGasChoice(), while not on gas selection screen");
-            return -3;
-        }
-        String btnCode = screenClient.get();
-        if (btnCode == null) {
-            return -2;
-        } else{
-            String[] btns = btnCode.split(REGEX);
-            if (btns.length == 1) {
-                // one button was pressed
-                if (btns[0].equals("9")) {
-                    // Confirm button pressed, alone, reset the screen
-                    setSelectGrade(inUseGas);
-                } else  {
-                    // Cancel button pressed
-                    return -1;
-                }
-            } else if (btns.length == 2){
-                // two buttons pressed
-                if (btns[0].equals("8")) {
-                    // Cancel button pressed
-                    return -1;
-                } else {
-                    // Gas was selected
-                    try {
-                        // convert to Double
-                        int gasSelection = Integer.parseInt(btns[1]);
-                        return  gasSelection - 1;
-                    } catch (NumberFormatException e) {
-                        System.err.println("Invalid number format: " + e.getMessage());
-                    }
-                }
-            }
-        }
-        // This only happens when the screen needs refreshed
-        return -2;
     }
 
     /**

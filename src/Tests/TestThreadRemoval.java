@@ -1,6 +1,6 @@
 package Tests;
 
-import SecondLevel.PaymentControl;
+import SecondLevel.PaymentServices;
 
 public class TestThreadRemoval {
     /**
@@ -9,7 +9,7 @@ public class TestThreadRemoval {
      */
 
     public static void main(String[] args) {
-        PaymentControl paymentControlTest = new PaymentControl();
+        PaymentServices paymentControlTest = new PaymentServices();
         while(true){
             paymentControlTest.handleMessages();
             try {

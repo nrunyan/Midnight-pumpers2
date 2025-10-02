@@ -162,9 +162,4 @@ public class PumpAssembly extends Thread {
             pumpOff();
         }
     }
-    // Reset the tank to being empty
-    public void resetTank() {
-        tankFull = false;
-        volumePumped = 0.0;
-    }
 }
