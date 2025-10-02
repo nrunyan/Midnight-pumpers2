@@ -2,14 +2,13 @@ package Main;
 
 import SecondLevel.Customer;
 import SecondLevel.GasStation;
-import SecondLevel.PaymentControl;
+import SecondLevel.PaymentServices;
 import SecondLevel.PumpAssembly;
 import Util.CreditCardEnum;
 import Util.GasTypeEnum;
 import Util.ScreenStatus;
 import Util.Timer;
 
-import java.sql.SQLOutput;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
  * Authors: Valerie Barker, Youssef Amin
  */
 public class PumpManager {
-    private PaymentControl paymentControl;
+    private PaymentServices paymentServices;
     private Customer customer;
     private GasStation gasStation;
     private PumpAssembly pumpAssembly;
@@ -32,8 +31,8 @@ public class PumpManager {
     private int gasIndex;
     private double totalPrice;
 
-    public PumpManager(PaymentControl paymentControl, Customer customer, GasStation gasStation, PumpAssembly pumpAssembly) {
-        this.paymentControl = paymentControl;
+    public PumpManager(PaymentServices paymentServices, Customer customer, GasStation gasStation, PumpAssembly pumpAssembly) {
+        this.paymentServices = paymentServices;
         this.customer = customer;
         this.gasStation = gasStation;
         this.pumpAssembly = pumpAssembly;
@@ -74,7 +73,7 @@ public class PumpManager {
 
         do {
             //Todo: card reader needs to read only one card at a time
-            paymentControl.resetCreditCardState();
+            paymentServices.resetCreditCardState();
             if (checkOff()) {
                 return;
             }
@@ -94,8 +93,8 @@ public class PumpManager {
             if (checkOff()) {
                 return;
             }
-            paymentControl.handleMessages();
-        } while ((Credit_Card_Status = paymentControl.getVerificationStatus()) == CreditCardEnum.NotPresent);
+            paymentServices.handleMessages();
+        } while ((Credit_Card_Status = paymentServices.getVerificationStatus()) == CreditCardEnum.NotPresent);
 
         if (Credit_Card_Status == CreditCardEnum.WaitingOnBonk) {
             pendingAuthorization();
@@ -117,8 +116,8 @@ public class PumpManager {
             if (checkOff()) {
                 return;
             }
-            paymentControl.handleMessages();
-        } while ((Credit_Card_Status = paymentControl.getVerificationStatus()) == CreditCardEnum.WaitingOnBonk);
+            paymentServices.handleMessages();
+        } while ((Credit_Card_Status = paymentServices.getVerificationStatus()) == CreditCardEnum.WaitingOnBonk);
 
     }
 
@@ -145,7 +144,7 @@ public class PumpManager {
         Timer timer = new Timer(120);
         do {
             //Gas_Grade_Selection=GasTypeEnum.GAS_TYPE_1; //WE NEED A RECHECK HERE
-            Gas_Grade_Selection = customer.getGasChoiceEnum();
+            Gas_Grade_Selection = customer.getGasChoice();
 
             if (timer.timeout()) {
                 standBy();
@@ -172,7 +171,7 @@ public class PumpManager {
         Timer timer = new Timer(120);
         do {
             customer.setStartPumping(In_Use_Price_List.get(gasIndex));
-            pumpAssembly.resetTank();
+            pumpAssembly.reset();
             if (timer.timeout()) {
                 standBy();
                 return;
@@ -256,7 +255,7 @@ public class PumpManager {
         customer.setGoodBye();
         Timer timer = new Timer(5);
         setUVD();
-        paymentControl.sendTransactionInfo(totalPrice);
+        paymentServices.sendTransactionInfo(totalPrice);
         gasStation.sendTransactionInfo(totalPrice, gasVolume, Gas_Grade_Selection);
         while (!timer.timeout()) {
 

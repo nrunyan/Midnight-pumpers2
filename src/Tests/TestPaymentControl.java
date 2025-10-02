@@ -1,6 +1,6 @@
 package Tests;
 
-import SecondLevel.PaymentControl;
+import SecondLevel.PaymentServices;
 
 /**
  * Another test main, handleMessages after starting the GUIs THIS IS LEGACY, THIS WON'T WORK ANYMORE
@@ -13,7 +13,7 @@ public class TestPaymentControl {
 
     public static boolean on = true;
     public static void main (String [] args) {
-        PaymentControl paymentControlTest = new PaymentControl();
+        PaymentServices paymentControlTest = new PaymentServices();
 
         while(on) {
             try {
